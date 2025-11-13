@@ -17,8 +17,8 @@ The indicator shows that the game is underway; it stops when the longer delay ha
 Example usage:
 
 <NonLeakyUrns
-  :timingLeft="base"
-  :timingRight="long"
+  :timingLeft="1000"
+  :timingRight="3000"
   :outputLeft="orange"
   :outputRight="black"
   :countOrangeLeft="3"
@@ -33,6 +33,7 @@ Example usage:
 import Vue from "vue";
 import { ref } from "vue";
 import Ball from "./Ball.vue";
+import Urn from "./Urn.vue";
 import Spinner from "vue-spinkit";
 
 Vue.component("Spinner", Spinner);
@@ -40,11 +41,11 @@ Vue.component("Spinner", Spinner);
 const props = defineProps({
   timingLeft: {
     type: Number,
-    default: 500
+    default: 1000
   },
   timingRight: {
     type: Number,
-    default: 500
+    default: 1000
   },
   outputLeft: {
     type: String,
@@ -108,39 +109,20 @@ function runGame() {
     <button @click="runGame">Begin</button>
 
     <div class="gamedisplay">
-      <div class="urn leftUrn">
-        <div class="col">
-          <Ball
-            v-for="n in countBlackLeft"
-            :key="'blackleft-' + n"
-            color="black"
-          />
-        </div>
-        <div class="col">
-          <Ball
-            v-for="n in countOrangeLeft"
-            :key="'orangeleft-' + n"
-            color="orange"
-          />
-        </div>
-      </div>
 
-      <div class="urn rightUrn">
-        <div class="col">
-          <Ball
-            v-for="n in countBlackRight"
-            :key="'blackleft-' + n"
-            color="black"
-          />
-        </div>
-        <div class="col">
-          <Ball
-            v-for="n in countOrangeRight"
-            :key="'orangeleft-' + n"
-            color="orange"
-          />
-        </div>
-      </div>
+      <Urn
+      firstColor="black"
+      secondColor="orange"
+      :firstCount="countBlackLeft"
+      :secondCount="countOrangeLeft"
+      class="leftUrn"/>
+
+      <Urn
+      firstColor="black"
+      secondColor="orange"
+      :firstCount="countBlackRight"
+      :secondCount="countOrangeRight"
+      class="rightUrn"/>
 
       <svg class="arrow leftArrow" width="20" height="60">
         <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2" />
@@ -178,26 +160,6 @@ function runGame() {
     'leftBall fixation rightBall';
   grid-template-rows: auto auto 50px;
   grid-template-columns: auto 0px auto;
-}
-
-.urn {
-  width: 120px;
-  border: 2px solid black;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
-  display: grid;
-  grid-template-columns: auto auto;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  padding-top: 10px;
-  justify-self: center;
-}
-
-.col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
 }
 
 .arrow {

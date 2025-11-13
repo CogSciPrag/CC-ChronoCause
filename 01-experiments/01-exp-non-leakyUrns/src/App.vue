@@ -3,10 +3,10 @@
     <Screen :title="'Game Test Screen 1/3'">
       simultaneous
       <NonLeakyUrns
-        :timingLeft="base"
-        :timingRight="base"
-        :outputLeft="orange"
-        :outputRight="black"
+          :timingLeft="base"
+          :timingRight="base"
+          :outputLeft="orange"
+          :outputRight="black"
       />
       <button @click="$magpie.nextScreen()">Next test screen</button>
     </Screen>
@@ -14,10 +14,10 @@
     <Screen :title="'Game Test Screen 2/3'">
       short delay
       <NonLeakyUrns
-        :timingLeft="base"
-        :timingRight="short"
-        :outputLeft="orange"
-        :outputRight="orange"
+          :timingLeft="base"
+          :timingRight="short"
+          :outputLeft="orange"
+          :outputRight="orange"
       />
       <button @click="$magpie.nextScreen()">Next test screen</button>
     </Screen>
@@ -25,10 +25,10 @@
     <Screen :title="'Game Test Screen 3/3'">
       long delay
       <NonLeakyUrns
-        :timingLeft="base"
-        :timingRight="long"
-        :outputLeft="black"
-        :outputRight="black"
+          :timingLeft="base"
+          :timingRight="long"
+          :outputLeft="black"
+          :outputRight="black"
       />
       The experiment proper starts on the next screen.
       <button @click="$magpie.nextScreen()">Next screen</button>
@@ -55,21 +55,21 @@
           structure == "conjunctive" ? "BOTH balls are" : "AT LEAST ONE ball is"
         }}
         <b style="color: orange">orange</b>.
-        <br />
+        <br/>
         Here are the possible outcomes:
       </p>
       <div class="outcomes">
         <div class="col">
-          <Ball color="orange" />
-          <Ball color="black" />
-          <Ball color="orange" />
-          <Ball color="black" />
+          <Ball color="orange"/>
+          <Ball color="black"/>
+          <Ball color="orange"/>
+          <Ball color="black"/>
         </div>
         <div class="col">
-          <Ball color="orange" />
-          <Ball color="orange" />
-          <Ball color="black" />
-          <Ball color="black" />
+          <Ball color="orange"/>
+          <Ball color="orange"/>
+          <Ball color="black"/>
+          <Ball color="black"/>
         </div>
         <div class="col">
           <p>WIN</p>
@@ -90,22 +90,29 @@
     </InstructionScreen>
     <!--    <template v-for="(trial, i) of training_trials">-->
     <Screen>
+
       <Slide>
         Press the button to see Alice's game:
         <NonLeakyUrns
-          :timingLeft="base"
-          :timingRight="long"
-          :outputLeft="orange"
-          :outputRight="orange"
+            :timingLeft="base"
+            :timingRight="long"
+            :outputLeft="orange"
+            :outputRight="orange"
         />
       </Slide>
+
       <Slide>
         Alice [won/lost] the game. These marbles were released:
-        <p style="display: flex; gap: 40px; justify-content: center">
-          <Ball color="orange" />
-          <Ball color="orange" />
-        </p>
-        <br />
+        <div style="display: flex; gap: 40px; justify-content:center; margin-top:30px;">
+          <!--TODO: Link visibility of emphasis to left/right condition -->
+          <div class="emphasis">
+            <Ball color="orange"/>
+          </div>
+          <div class="emphasis">
+            <Ball color="orange"/>
+          </div>
+        </div>
+        <br/>
         <p>
           Do you agree with the following statement?
         </p>
@@ -114,9 +121,9 @@
           <b>Orange ball falling out of the left urn caused Alice to win.</b>
         </p>
         <RatingInput
-          left="strongly disagree"
-          :response.sync="$magpie.measurements.X"
-          right="strongly agree"
+            left="strongly disagree"
+            :response.sync="$magpie.measurements.X"
+            right="strongly agree"
         />
         <button @click="$magpie.saveAndNextScreen()">Submit</button>
       </Slide>
@@ -130,7 +137,7 @@
     <!--    <template v-for="(trial, i) of main_trials">-->
     <!--    </template>-->
 
-    <SubmitResultsScreen />
+    <SubmitResultsScreen/>
   </Experiment>
 </template>
 
@@ -143,15 +150,13 @@ import training_trials from "../trials/training_trials.csv";
 import main_trials from "../trials/main_trials.csv";
 
 const structure = _.shuffle(["conjunctive", "disjunctive"])[0];
-const outcomes_img = "images/outcomes-" + structure + ".png";
 
 export default {
   name: "App",
-  components: { NonLeakyUrns, Ball },
+  components: {NonLeakyUrns, Ball},
   data() {
     return {
       structure: structure,
-      outcomes_img: outcomes_img,
       base: 1000,
       short: 2000,
       long: 3000
@@ -179,4 +184,15 @@ export default {
   gap: 10px;
   grid-template-rows: 50px 50px 50px 50px;
 }
+
+.emphasis {
+  border: 2px solid black;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+}
+
 </style>
