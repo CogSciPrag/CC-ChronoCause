@@ -1,4 +1,6 @@
 <!--
+TODO: update docs
+
 The component is comprised of two urns with a variable number of black and orange marbles.
 After the user presses the button, balls with specified colors appear under each urn.
 Each can appear with a specified delay.
@@ -31,7 +33,7 @@ Example usage:
 
 <script setup>
 import Vue from "vue";
-import { ref } from "vue";
+import {ref} from "vue";
 import Ball from "./Ball.vue";
 import Urn from "./Urn.vue";
 import Spinner from "vue-spinkit";
@@ -47,43 +49,80 @@ const props = defineProps({
     type: Number,
     default: 1000
   },
-  outputLeft: {
+  outputLeftFirst: {
+    type: Boolean,
+    default: 'true'
+  },
+  outputRightFirst: {
+    type: Boolean,
+    default: 'true'
+  },
+  firstColorLeft: {
     type: String,
-    default: 'orange'
+    default: 'black'
   },
-  outputRight: {
+  secondColorLeft: {
     type: String,
-    default: 'orange'
+    default: 'gold'
   },
-  countOrangeLeft: {
+  firstColorRight: {
+    type: String,
+    default: 'black'
+  },
+  secondColorRight: {
+    type: String,
+    default: 'gold'
+  },
+  firstTypeLeft: {
+    type: String,
+    default: 'solid'
+  },
+  secondTypeLeft: {
+    type: String,
+    default: 'solid'
+  },
+  firstTypeRight: {
+    type: String,
+    default: 'solid'
+  },
+  secondTypeRight: {
+    type: String,
+    default: 'solid'
+  },
+  firstCountLeft: {
     type: Number,
     default: 5
   },
-  countBlackLeft: {
+  secondCountLeft: {
     type: Number,
     default: 5
   },
-  countOrangeRight: {
+  firstCountRight: {
     type: Number,
     default: 5
   },
-  countBlackRight: {
+  secondCountRight: {
     type: Number,
     default: 5
+  },
+  enabled: {
+    type: Boolean,
+    default: true
   }
 });
 
-const leftBallVisible = ref(false);
-const rightBallVisible = ref(false);
+const leftBallVisible = props.enabled ? ref(false) : ref(true);
+const rightBallVisible = props.enabled ? ref(false) : ref(true);
+const beginBtnVisible = props.enabled ? ref(true) : ref(false);
 const fixationVisible = ref(false);
-const nextBtnVisible = ref(false);
 
 
 function runGame() {
   const fixationTiming =
-    props.timingLeft > props.timingRight ? props.timingLeft : props.timingRight;
+      props.timingLeft > props.timingRight ? props.timingLeft : props.timingRight;
 
   fixationVisible.value = true;
+  beginBtnVisible.value = false;
 
   setTimeout(() => {
     leftBallVisible.value = true;
@@ -98,7 +137,7 @@ function runGame() {
   }, fixationTiming);
 
   setTimeout(() => {
-    nextBtnVisible.value = true;
+    $magpie.nextSlide();
   }, fixationTiming + 1000);
 }
 </script>
@@ -106,45 +145,56 @@ function runGame() {
 <template>
   <div class="game">
 
-    <button @click="runGame">Begin</button>
-
+    <div class="btnSpace">
+      <button v-if="beginBtnVisible" @click="runGame">Begin</button>
+    </div>
     <div class="gamedisplay">
 
       <Urn
-      firstColor="black"
-      secondColor="orange"
-      :firstCount="countBlackLeft"
-      :secondCount="countOrangeLeft"
-      class="leftUrn"/>
+          :firstColor="firstColorLeft"
+          :firstType="firstTypeLeft"
+          :firstCount="firstCountLeft"
+          :secondColor="secondColorLeft"
+          :secondType="secondTypeLeft"
+          :secondCount="secondCountLeft"
+          class="leftUrn"/>
 
       <Urn
-      firstColor="black"
-      secondColor="orange"
-      :firstCount="countBlackRight"
-      :secondCount="countOrangeRight"
-      class="rightUrn"/>
+          :firstColor="firstColorRight"
+          :firstType="firstTypeRight"
+          :firstCount="firstCountRight"
+          :secondColor="secondColorRight"
+          :secondType="secondTypeRight"
+          :secondCount="secondCountRight"
+          class="rightUrn"/>
 
       <svg class="arrow leftArrow" width="20" height="60">
-        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2" />
-        <polygon points="5,50 15,50 10,60" fill="black" />
+        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
+        <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
 
       <svg class="arrow rightArrow" width="20" height="60">
-        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2" />
-        <polygon points="5,50 15,50 10,60" fill="black" />
+        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
+        <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
 
       <Spinner
-        v-if="fixationVisible"
-        class="fixation"
-        name="double-bounce"
-        color="#000000"
+          v-if="fixationVisible"
+          class="fixation"
+          name="double-bounce"
+          color="#000000"
       />
 
-      <Ball v-if="leftBallVisible" :class="outputLeft" class="leftBall" />
-      <Ball v-if="rightBallVisible" :class="outputRight" class="rightBall" />
+      <Ball v-if="leftBallVisible && outputLeftFirst" :color="firstColorLeft" :type="firstTypeLeft" class="leftBall"/>
+      <Ball v-if="leftBallVisible && !outputLeftFirst" :color="secondColorLeft" :type="secondTypeLeft"
+            class="leftBall"/>
+
+      <Ball v-if="rightBallVisible && outputRightFirst" :color="firstColorRight" :type="firstTypeRight"
+            class="rightBall"/>
+      <Ball v-if="rightBallVisible && !outputRightFirst" :color="secondColorRight" :type="secondTypeRight"
+            class="rightBall"/>
+
     </div>
-    <button v-if="nextBtnVisible" @click="$magpie.nextSlide()">Next</button>
   </div>
 </template>
 
@@ -200,5 +250,10 @@ function runGame() {
 .fixation {
   animation: none !important;
   opacity: 0.5;
+}
+
+.btnSpace {
+  height: 35px;
+  margin-top: 40px;
 }
 </style>

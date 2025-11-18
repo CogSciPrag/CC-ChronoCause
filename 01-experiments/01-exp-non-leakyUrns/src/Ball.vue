@@ -1,4 +1,5 @@
 <!--
+TODO: update
 A ball of a specified color, with the initial letter of the color’s name on it.
 
 Parameters:
@@ -15,12 +16,13 @@ import Vue from "vue";
 import Component from "vue-class-component";
 
 defineProps({
-  color: String
+  color: String,
+  type: String
 });
 </script>
 
 <template>
-  <div :class="color" class="ball"></div>
+  <div :class="[color,type]" class="ball"></div>
 </template>
 
 <style scoped>
@@ -33,60 +35,45 @@ defineProps({
   align-items: center;
   color: white;
   font-weight: bold;
+  border: 1px solid darkgrey;
 }
 
-.orange {
-  background-color: orange;
-  border: 2px solid darkgrey;
-}
-
-.orange::before {
-  content: 'O';
-}
-
-.black {
-  background-color: black;
-  border: 2px solid darkgrey;
-}
-
-.black::before {
-  content: 'B';
-}
-
-.green {
-  background-color: green;
-  border: 2px solid darkgreen;
-}
-
-.green::before {
-  content: 'G';
-}
 
 .red {
-  background-color: red;
-  border: 2px solid darkred;
-}
-
-.red::before {
-  content: 'R';
+  --color: #B22222;
+  --name: 'R';
 }
 
 .yellow {
-  background-color: gold;
-  border: 2px solid darkgoldenrod;
+  --color: #EEB14F;
+  --name: 'Y';
 }
 
-.yellow::before {
-  content: 'Y';
+.green {
+  --color: #3C902B;
+  --name: 'G';
 }
 
 .blue {
-  background-color: blue;
-  border: 2px solid darkblue;
+  --color: #3A4FB4;
+  --name: 'B';
 }
 
-.blue::before {
-  content: 'B';
+.ball::before{
+  content: var(--name);
+}
+
+.solid{
+  background-color: var(--color);
+}
+
+.stripe{
+  background: linear-gradient(
+      to bottom,
+      #fff 0 20%,
+      var(--color) 20% 80%,
+      #fff 80% 100%
+    );
 }
 </style>
 

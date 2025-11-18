@@ -1,43 +1,11 @@
 <template>
   <Experiment title="ChronoCause">
-    <Screen :title="'Game Test Screen 1/3'">
-      simultaneous
-      <NonLeakyUrns
-          :timingLeft="base"
-          :timingRight="base"
-          :outputLeft="orange"
-          :outputRight="black"
-      />
-      <button @click="$magpie.nextScreen()">Next test screen</button>
-    </Screen>
-
-    <Screen :title="'Game Test Screen 2/3'">
-      short delay
-      <NonLeakyUrns
-          :timingLeft="base"
-          :timingRight="short"
-          :outputLeft="orange"
-          :outputRight="orange"
-      />
-      <button @click="$magpie.nextScreen()">Next test screen</button>
-    </Screen>
-
-    <Screen :title="'Game Test Screen 3/3'">
-      long delay
-      <NonLeakyUrns
-          :timingLeft="base"
-          :timingRight="long"
-          :outputLeft="black"
-          :outputRight="black"
-      />
-      The experiment proper starts on the next screen.
-      <button @click="$magpie.nextScreen()">Next screen</button>
-    </Screen>
 
     <InstructionScreen :title="'Welcome'">
       Hi! Thanks for taking part! In this experiment, you will be introduced to
       a simple game. Then, you will see a few rounds of the game being played
       and you will be asked to make some judgements.
+      <div class="pool-ball"></div>
     </InstructionScreen>
 
     <InstructionScreen :titles="'Game Rules'">
@@ -48,6 +16,25 @@
         <b style="color: orange">orange</b>, and 5 of the balls are
         <b>black</b>.
       </p>
+
+      <div class="urns">
+        <Urn
+            firstColor="red"
+            secondColor="blue"
+            :firstCount="5"
+            :secondCount="5"
+            firstType="solid"
+            secondType="stripe"
+        />
+        <Urn
+            firstColor="yellow"
+            secondColor="green"
+            :firstCount="5"
+            :secondCount="5"
+            firstType="solid"
+            secondType="stripe"
+        />
+      </div>
       <p>
         When the player presses the button, a ball is released from each urn.
         The player wins just in case
@@ -60,16 +47,16 @@
       </p>
       <div class="outcomes">
         <div class="col">
-          <Ball color="orange"/>
-          <Ball color="black"/>
-          <Ball color="orange"/>
-          <Ball color="black"/>
+          <Ball color="red" type="solid"/>
+          <Ball color="blue" type="stripe"/>
+          <Ball color="red" type="solid"/>
+          <Ball color="blue" type="stripe"/>
         </div>
         <div class="col">
-          <Ball color="orange"/>
-          <Ball color="orange"/>
-          <Ball color="black"/>
-          <Ball color="black"/>
+          <Ball color="yellow" type="solid"/>
+          <Ball color="yellow" type="solid"/>
+          <Ball color="green" type="stripe"/>
+          <Ball color="green" type="stripe"/>
         </div>
         <div class="col">
           <p>WIN</p>
@@ -80,11 +67,16 @@
       </div>
     </InstructionScreen>
 
+    <InstructionScreen>
+      Comprehension question like in InferCausAttr
+    </InstructionScreen>
+
     <InstructionScreen :title="'Instructions'">
       <p>
         In this experiment, Alice will be playing the game. You will see a few
         rounds, and after each round, you will be asked to judge several
         statements.
+        df thethi
       </p>
       <p>Let’s practice this first!</p>
     </InstructionScreen>
@@ -96,29 +88,46 @@
         <NonLeakyUrns
             :timingLeft="base"
             :timingRight="long"
-            :outputLeft="orange"
-            :outputRight="orange"
+            firstColorLeft="red"
+            firstTypeLeft="solid"
+            secondColorLeft="blue"
+            secondTypeLeft="stripe"
+            firstColorRight="yellow"
+            firstTypeRight="solid"
+            secondColorRight="green"
+            secondTypeRight="stripe"
+            :outputLeftFirst="false"
+            :outputRightFirst="true"
         />
       </Slide>
 
       <Slide>
-        Alice [won/lost] the game. These marbles were released:
-        <div style="display: flex; gap: 40px; justify-content:center; margin-top:30px;">
-          <!--TODO: Link visibility of emphasis to left/right condition -->
-          <div class="emphasis">
-            <Ball color="orange"/>
-          </div>
-          <div class="emphasis">
-            <Ball color="orange"/>
-          </div>
-        </div>
+
+        Alice [won/lost] the game.
+        <NonLeakyUrns
+            :timingLeft="base"
+            :timingRight="long"
+            firstColorLeft="red"
+            firstTypeLeft="solid"
+            secondColorLeft="blue"
+            secondTypeLeft="stripe"
+            firstColorRight="yellow"
+            firstTypeRight="solid"
+            secondColorRight="green"
+            secondTypeRight="stripe"
+            :outputLeftFirst="false"
+            :outputRightFirst="true"
+            :enabled="false"
+        />
+
+
         <br/>
         <p>
           Do you agree with the following statement?
         </p>
 
         <p>
-          <b>Orange ball falling out of the left urn caused Alice to win.</b>
+          <b>The [color] ball caused Alice to win.</b>
         </p>
         <RatingInput
             left="strongly disagree"
@@ -148,12 +157,13 @@ import Ball from "./Ball.vue";
 
 import training_trials from "../trials/training_trials.csv";
 import main_trials from "../trials/main_trials.csv";
+import Urn from "./Urn.vue";
 
 const structure = _.shuffle(["conjunctive", "disjunctive"])[0];
 
 export default {
   name: "App",
-  components: {NonLeakyUrns, Ball},
+  components: {Urn, NonLeakyUrns, Ball},
   data() {
     return {
       structure: structure,
@@ -185,14 +195,13 @@ export default {
   grid-template-rows: 50px 50px 50px 50px;
 }
 
-.emphasis {
-  border: 2px solid black;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
+.urns {
+  width: 100%;
   justify-content: center;
-  width: 55px;
-  height: 55px;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 50px;
 }
+
 
 </style>

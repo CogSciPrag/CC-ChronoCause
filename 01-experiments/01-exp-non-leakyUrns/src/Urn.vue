@@ -1,4 +1,5 @@
 <!--
+TODO: update
 An urn with balls of two given colors.
 
 Parameters:
@@ -31,6 +32,14 @@ defineProps({
     type: String,
     default: "red",
   },
+firstType: {
+    type: String,
+    default: "solid",
+  },
+  secondType: {
+    type: String,
+    default: "solid",
+  },
   firstCount: {
     type: Number,
     default: 5,
@@ -50,6 +59,7 @@ defineProps({
             v-for="n in firstCount"
             :key="'first-' + n"
             :color="firstColor"
+            :type="firstType"
           />
         </div>
         <div class="col">
@@ -57,6 +67,7 @@ defineProps({
             v-for="n in secondCount"
             :key="'second-' + n"
             :color="secondColor"
+            :type="secondType"
           />
         </div>
       </div>
