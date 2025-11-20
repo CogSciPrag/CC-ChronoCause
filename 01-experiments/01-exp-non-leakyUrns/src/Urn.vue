@@ -45,7 +45,7 @@ firstType: {
     default: 5,
   },
   secondCount: {
-    type: String,
+    type: Number,
     default: 5,
   }
 })

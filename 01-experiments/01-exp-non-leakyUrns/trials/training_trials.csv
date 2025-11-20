@@ -1,0 +1,5 @@
+structure,leftColor,rightColor,gameOutcome,delay
+conjunctive,red,yellow,win,simult
+conjunctive,blue,yellow,lose,short
+disjunctive,red,green,win,simult
+disjunctive,blue,green,lose,short

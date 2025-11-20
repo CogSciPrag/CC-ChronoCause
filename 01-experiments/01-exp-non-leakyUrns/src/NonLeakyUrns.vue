@@ -49,14 +49,6 @@ const props = defineProps({
     type: Number,
     default: 1000
   },
-  outputLeftFirst: {
-    type: Boolean,
-    default: 'true'
-  },
-  outputRightFirst: {
-    type: Boolean,
-    default: 'true'
-  },
   firstColorLeft: {
     type: String,
     default: 'black'
@@ -108,6 +100,22 @@ const props = defineProps({
   enabled: {
     type: Boolean,
     default: true
+  },
+  outputColorLeft: {
+    type: String,
+    default: 'gold'
+  },
+  outputTypeLeft: {
+    type: String,
+    default: 'solid'
+  },
+  outputColorRight: {
+    type: String,
+    default: 'gold'
+  },
+  outputTypeRight: {
+    type: String,
+    default: 'solid'
   }
 });
 
@@ -137,9 +145,11 @@ function runGame() {
   }, fixationTiming);
 
   setTimeout(() => {
-    $magpie.nextSlide();
+    $magpie.nextScreen();
   }, fixationTiming + 1000);
 }
+
+
 </script>
 
 <template>
@@ -185,14 +195,8 @@ function runGame() {
           color="#000000"
       />
 
-      <Ball v-if="leftBallVisible && outputLeftFirst" :color="firstColorLeft" :type="firstTypeLeft" class="leftBall"/>
-      <Ball v-if="leftBallVisible && !outputLeftFirst" :color="secondColorLeft" :type="secondTypeLeft"
-            class="leftBall"/>
-
-      <Ball v-if="rightBallVisible && outputRightFirst" :color="firstColorRight" :type="firstTypeRight"
-            class="rightBall"/>
-      <Ball v-if="rightBallVisible && !outputRightFirst" :color="secondColorRight" :type="secondTypeRight"
-            class="rightBall"/>
+      <Ball v-if="leftBallVisible" :color="outputColorLeft" :type="outputTypeLeft" class="leftBall"/>
+      <Ball v-if="rightBallVisible" :color="outputColorRight" :type="outputTypeRight" class="rightBall"/>
 
     </div>
   </div>

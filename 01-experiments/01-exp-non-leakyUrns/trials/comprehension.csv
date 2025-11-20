@@ -1,0 +1,9 @@
+structure,trialNr,leftColor,rightColor,correctResponse
+disjunctive,1,red,yellow,win
+disjunctive,2,blue,yellow,win
+disjunctive,3,red,green,win
+disjunctive,4,blue,green,lose
+conjunctive,1,red,yellow,win
+conjunctive,2,blue,yellow,lose
+conjunctive,3,red,green,lose
+conjunctive,4,blue,green,lose

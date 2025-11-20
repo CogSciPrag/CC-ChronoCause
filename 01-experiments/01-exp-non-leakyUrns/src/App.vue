@@ -2,7 +2,7 @@
   <Experiment title="ChronoCause">
 
     <InstructionScreen :title="'Welcome'">
-      Hi! Thanks for taking part! In this experiment, you will be introduced to
+    Hi! Thanks for taking part! In this experiment, you will be introduced to
       a simple game. Then, you will see a few rounds of the game being played
       and you will be asked to make some judgements.
       <div class="pool-ball"></div>
@@ -19,20 +19,21 @@
 
       <div class="urns">
         <Urn
-            firstColor="red"
-            secondColor="blue"
-            :firstCount="5"
-            :secondCount="5"
-            firstType="solid"
-            secondType="stripe"
+            firstColor='red'
+            :firstType='getType("red")'
+            :firstCount=5
+            secondColor='blue'
+            :secondType='getType("blue")'
+            :secondCount=5
+
         />
         <Urn
-            firstColor="yellow"
-            secondColor="green"
-            :firstCount="5"
-            :secondCount="5"
-            firstType="solid"
-            secondType="stripe"
+            firstColor='yellow'
+            :firstType='getType("yellow")'
+            :firstCount=5
+            secondColor='green'
+            :secondType='getType("green")'
+            :secondCount=5
         />
       </div>
       <p>
@@ -47,16 +48,16 @@
       </p>
       <div class="outcomes">
         <div class="col">
-          <Ball color="red" type="solid"/>
-          <Ball color="blue" type="stripe"/>
-          <Ball color="red" type="solid"/>
-          <Ball color="blue" type="stripe"/>
+          <Ball color="red" :type='getType("red")'/>
+          <Ball color="blue" :type='getType("blue")'/>
+          <Ball color="red" :type='getType("red")'/>
+          <Ball color="blue" :type='getType("blue")'/>
         </div>
         <div class="col">
-          <Ball color="yellow" type="solid"/>
-          <Ball color="yellow" type="solid"/>
-          <Ball color="green" type="stripe"/>
-          <Ball color="green" type="stripe"/>
+          <Ball color="yellow" :type='getType("yellow")'/>
+          <Ball color="yellow" :type='getType("yellow")'/>
+          <Ball color="green" :type='getType("green")'/>
+          <Ball color="green" :type='getType("green")'/>
         </div>
         <div class="col">
           <p>WIN</p>
@@ -67,84 +68,201 @@
       </div>
     </InstructionScreen>
 
-    <InstructionScreen>
-      Comprehension question like in InferCausAttr
-    </InstructionScreen>
+    <template v-for="(trial, i) in comprehension">
+      <Screen>
+        <Slide>
+          Remember the rule that determines the sound that the machine makes:
+          <div style="color: gray">
+            TODO ADD RULE
+          </div>
+
+          To make sure you understand, please select whether a player would win or lose when the following balls are
+          released:
+
+          <p class="outcomeBalls">
+            <Ball class="col" :color="trial.leftColor" :type="getType(trial.leftColor)"/>
+            <Ball clas="col" :color="trial.rightColor" :type="getType(trial.rightColor)"/>
+          </p>
+
+          <ForcedChoiceInput
+              :response.sync="$magpie.measurements.response"
+              :options="['win', 'lose']"
+              @update:response="$magpie.saveAndNextScreen();"/>
+
+          <Record
+              :data="{
+              trialType : 'comprehension',
+              trialNr : i+1,
+              correctResponse: trial.correctResponse,
+              response : $magpie.measurements.response,
+              structure : structure,
+              fixedTerminology: true
+            }"
+          />
+
+        </Slide>
+      </Screen>
+    </template>
+
 
     <InstructionScreen :title="'Instructions'">
       <p>
-        In this experiment, Alice will be playing the game. You will see a few
-        rounds, and after each round, you will be asked to judge several
-        statements.
-        df thethi
+        In this experiment, Alice will be playing the game.
+        You will see a few rounds, and after each round, you will be asked to judge several statements.
       </p>
       <p>Let’s practice this first!</p>
     </InstructionScreen>
-    <!--    <template v-for="(trial, i) of training_trials">-->
-    <Screen>
+    <template v-for="(trial, i) of training_trials">
+      <Screen>
+        <Slide>
+          Press the button to see Alice's game:
+          <NonLeakyUrns
+              firstColorLeft='red'
+              :firstTypeLeft='getType("red")'
+              secondColorLeft='blue'
+              :secondTypeLeft='getType("blue")'
+              firstColorRight='yellow'
+              :firstTypeRight='getType("yellow")'
+              secondColorRight='green'
+              :secondTypeRight='getType("green")'
+              :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
+              :outputColorLeft=trial.leftColor
+              :outputTypeLeft='getType(trial.leftColor)'
+              :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
+              :outputColorRight=trial.rightColor
+              :outputTypeRight='getType(trial.rightColor)'
+          />
+        </Slide>
+      </Screen>
+        <Screen>
+          <Slide>
+            Press the button to see Alice's game:
+            <NonLeakyUrns
+                firstColorLeft='red'
+                :firstTypeLeft='getType("red")'
+                secondColorLeft='blue'
+                :secondTypeLeft='getType("blue")'
+                firstColorRight='yellow'
+                :firstTypeRight='getType("yellow")'
+                secondColorRight='green'
+                :secondTypeRight='getType("green")'
+                :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
+                :outputColorLeft=trial.leftColor
+                :outputTypeLeft='getType(trial.leftColor)'
+                :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
+                :outputColorRight=trial.rightColor
+                :outputTypeRight='getType(trial.rightColor)'
+                :enabled="false"
+            />
 
-      <Slide>
-        Press the button to see Alice's game:
-        <NonLeakyUrns
-            :timingLeft="base"
-            :timingRight="long"
-            firstColorLeft="red"
-            firstTypeLeft="solid"
-            secondColorLeft="blue"
-            secondTypeLeft="stripe"
-            firstColorRight="yellow"
-            firstTypeRight="solid"
-            secondColorRight="green"
-            secondTypeRight="stripe"
-            :outputLeftFirst="false"
-            :outputRightFirst="true"
-        />
-      </Slide>
+            Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
+            <br/>
+            <p>
+              Do you agree with the following statements?
+            </p>
 
-      <Slide>
+            <p>
+              <b>The <span :class="trial.leftColor">{{ trial.leftColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
+            </p>
+            <RatingInput
+                left="strongly disagree"
+                :response.sync="$magpie.measurements.X"
+                right="strongly agree"
+            />
 
-        Alice [won/lost] the game.
-        <NonLeakyUrns
-            :timingLeft="base"
-            :timingRight="long"
-            firstColorLeft="red"
-            firstTypeLeft="solid"
-            secondColorLeft="blue"
-            secondTypeLeft="stripe"
-            firstColorRight="yellow"
-            firstTypeRight="solid"
-            secondColorRight="green"
-            secondTypeRight="stripe"
-            :outputLeftFirst="false"
-            :outputRightFirst="true"
-            :enabled="false"
-        />
+            <p>
+              <b>The <span :class="trial.rightColor">{{ trial.rightColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
+            </p>
+            <RatingInput
+                left="strongly disagree"
+                :response.sync="$magpie.measurements.X"
+                right="strongly agree"
+            />
+            <button @click="$magpie.saveAndNextScreen()">Submit</button>
+
+          </Slide>
+        </Screen>
 
 
-        <br/>
-        <p>
-          Do you agree with the following statement?
-        </p>
-
-        <p>
-          <b>The [color] ball caused Alice to win.</b>
-        </p>
-        <RatingInput
-            left="strongly disagree"
-            :response.sync="$magpie.measurements.X"
-            right="strongly agree"
-        />
-        <button @click="$magpie.saveAndNextScreen()">Submit</button>
-      </Slide>
-    </Screen>
-    <!--    </template>-->
+    </template>
 
     <InstructionScreen :title="'Instructions'">
       <p>Great! You are now ready to start the main experiment.</p>
     </InstructionScreen>
 
-    <!--    <template v-for="(trial, i) of main_trials">-->
-    <!--    </template>-->
+    <template v-for="(trial, i) of main_trials">
+      <Screen>
+        <Slide>
+          Press the button to see Alice's game:
+          <NonLeakyUrns
+              firstColorLeft='red'
+              :firstTypeLeft='getType("red")'
+              secondColorLeft='blue'
+              :secondTypeLeft='getType("blue")'
+              firstColorRight='yellow'
+              :firstTypeRight='getType("yellow")'
+              secondColorRight='green'
+              :secondTypeRight='getType("green")'
+              :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
+              :outputColorLeft=trial.leftColor
+              :outputTypeLeft='getType(trial.leftColor)'
+              :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
+              :outputColorRight=trial.rightColor
+              :outputTypeRight='getType(trial.rightColor)'
+          />
+        </Slide>
+      </Screen>
+        <Screen>
+          <Slide>
+            Press the button to see Alice's game:
+            <NonLeakyUrns
+                firstColorLeft='red'
+                :firstTypeLeft='getType("red")'
+                secondColorLeft='blue'
+                :secondTypeLeft='getType("blue")'
+                firstColorRight='yellow'
+                :firstTypeRight='getType("yellow")'
+                secondColorRight='green'
+                :secondTypeRight='getType("green")'
+                :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
+                :outputColorLeft=trial.leftColor
+                :outputTypeLeft='getType(trial.leftColor)'
+                :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
+                :outputColorRight=trial.rightColor
+                :outputTypeRight='getType(trial.rightColor)'
+                :enabled="false"
+            />
+
+            Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
+            <br/>
+            <p>
+              Do you agree with the following statements?
+            </p>
+
+            <p>
+              <b>The <span :class="trial.leftColor">{{ trial.leftColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
+            </p>
+            <RatingInput
+                left="strongly disagree"
+                :response.sync="$magpie.measurements.X"
+                right="strongly agree"
+            />
+
+            <p>
+              <b>The <span :class="trial.rightColor">{{ trial.rightColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
+            </p>
+            <RatingInput
+                left="strongly disagree"
+                :response.sync="$magpie.measurements.X"
+                right="strongly agree"
+            />
+            <button @click="$magpie.saveAndNextScreen()">Submit</button>
+
+          </Slide>
+        </Screen>
+
+
+    </template>
 
     <SubmitResultsScreen/>
   </Experiment>
@@ -155,11 +273,32 @@ import _ from "lodash";
 import NonLeakyUrns from "./NonLeakyUrns.vue";
 import Ball from "./Ball.vue";
 
-import training_trials from "../trials/training_trials.csv";
-import main_trials from "../trials/main_trials.csv";
+import training_trials_all from "../trials/training_trials.csv";
+import main_trials_all from "../trials/main_trials.csv";
+import comprehension_all from "../trials/comprehension.csv";
 import Urn from "./Urn.vue";
 
 const structure = _.shuffle(["conjunctive", "disjunctive"])[0];
+
+const main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
+  return i.structure == structure;
+}));
+main_trials.forEach(trial => {
+  trial['delayedUrn'] = _.sample(['left', 'right']);
+});
+const training_trials = _.filter(training_trials_all, function (i) {
+  return i.structure == structure;
+});
+
+training_trials.forEach(trial => {
+  trial['delayedUrn'] = _.sample(['left', 'right']);
+});
+console.log(training_trials_all);
+console.log(structure);
+console.log(training_trials);
+const comprehension = _.filter(comprehension_all, function (i) {
+  return i.structure == structure;
+});
 
 export default {
   name: "App",
@@ -167,10 +306,45 @@ export default {
   data() {
     return {
       structure: structure,
-      base: 1000,
-      short: 2000,
-      long: 3000
+      main_trials: main_trials,
+      training_trials: training_trials,
+      comprehension: comprehension,
     };
+  },
+  methods: {
+    getType(color) {
+      let type = 'solid';
+      switch (color) {
+        case 'red':
+          type = 'solid';
+          break;
+        case 'yellow':
+          type = 'solid';
+          break;
+        case 'blue':
+          type = 'stripe';
+          break;
+        case 'green':
+          type = 'stripe';
+          break;
+      }
+      return type;
+    },
+    getDelay(name) {
+      let delay = 1000;
+      switch (name) {
+        case 'base':
+          delay = 1000;
+          break;
+        case 'short':
+          delay = 2000;
+          break;
+        case 'long':
+          delay = 3000;
+          break;
+      }
+      return delay;
+    }
   },
   computed: {
     _() {
@@ -195,6 +369,21 @@ export default {
   grid-template-rows: 50px 50px 50px 50px;
 }
 
+.outcomeBalls {
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 50px 50px;
+  gap: 10px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.outcomeBalls .col {
+  display: grid;
+  align-items: center;
+
+}
+
 .urns {
   width: 100%;
   justify-content: center;
@@ -203,5 +392,12 @@ export default {
   gap: 50px;
 }
 
+.red {color: #B22222;}
+
+.yellow {color: #EEB14F;}
+
+.green {color: #3C902B;}
+
+.blue {color: #3A4FB4;}
 
 </style>
