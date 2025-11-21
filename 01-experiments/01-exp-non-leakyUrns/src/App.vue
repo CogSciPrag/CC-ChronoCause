@@ -2,7 +2,7 @@
   <Experiment title="ChronoCause">
 
     <InstructionScreen :title="'Welcome'">
-    Hi! Thanks for taking part! In this experiment, you will be introduced to
+      Hi! Thanks for taking part! In this experiment, you will be introduced to
       a simple game. Then, you will see a few rounds of the game being played
       and you will be asked to make some judgements.
       <div class="pool-ball"></div>
@@ -94,6 +94,8 @@
               trialType : 'comprehension',
               trialNr : i+1,
               correctResponse: trial.correctResponse,
+              leftColor : trial.leftColor,
+              rightColor : trial.rightColor,
               response : $magpie.measurements.response,
               structure : structure,
               fixedTerminology: true
@@ -113,77 +115,7 @@
       <p>Let’s practice this first!</p>
     </InstructionScreen>
     <template v-for="(trial, i) of training_trials">
-      <Screen>
-        <Slide>
-          Press the button to see Alice's game:
-          <NonLeakyUrns
-              firstColorLeft='red'
-              :firstTypeLeft='getType("red")'
-              secondColorLeft='blue'
-              :secondTypeLeft='getType("blue")'
-              firstColorRight='yellow'
-              :firstTypeRight='getType("yellow")'
-              secondColorRight='green'
-              :secondTypeRight='getType("green")'
-              :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
-              :outputColorLeft=trial.leftColor
-              :outputTypeLeft='getType(trial.leftColor)'
-              :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
-              :outputColorRight=trial.rightColor
-              :outputTypeRight='getType(trial.rightColor)'
-          />
-        </Slide>
-      </Screen>
-        <Screen>
-          <Slide>
-            Press the button to see Alice's game:
-            <NonLeakyUrns
-                firstColorLeft='red'
-                :firstTypeLeft='getType("red")'
-                secondColorLeft='blue'
-                :secondTypeLeft='getType("blue")'
-                firstColorRight='yellow'
-                :firstTypeRight='getType("yellow")'
-                secondColorRight='green'
-                :secondTypeRight='getType("green")'
-                :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
-                :outputColorLeft=trial.leftColor
-                :outputTypeLeft='getType(trial.leftColor)'
-                :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
-                :outputColorRight=trial.rightColor
-                :outputTypeRight='getType(trial.rightColor)'
-                :enabled="false"
-            />
-
-            Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
-            <br/>
-            <p>
-              Do you agree with the following statements?
-            </p>
-
-            <p>
-              <b>The <span :class="trial.leftColor">{{ trial.leftColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
-            </p>
-            <RatingInput
-                left="strongly disagree"
-                :response.sync="$magpie.measurements.X"
-                right="strongly agree"
-            />
-
-            <p>
-              <b>The <span :class="trial.rightColor">{{ trial.rightColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
-            </p>
-            <RatingInput
-                left="strongly disagree"
-                :response.sync="$magpie.measurements.X"
-                right="strongly agree"
-            />
-            <button @click="$magpie.saveAndNextScreen()">Submit</button>
-
-          </Slide>
-        </Screen>
-
-
+      <TrialScreens :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
     </template>
 
     <InstructionScreen :title="'Instructions'">
@@ -191,77 +123,7 @@
     </InstructionScreen>
 
     <template v-for="(trial, i) of main_trials">
-      <Screen>
-        <Slide>
-          Press the button to see Alice's game:
-          <NonLeakyUrns
-              firstColorLeft='red'
-              :firstTypeLeft='getType("red")'
-              secondColorLeft='blue'
-              :secondTypeLeft='getType("blue")'
-              firstColorRight='yellow'
-              :firstTypeRight='getType("yellow")'
-              secondColorRight='green'
-              :secondTypeRight='getType("green")'
-              :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
-              :outputColorLeft=trial.leftColor
-              :outputTypeLeft='getType(trial.leftColor)'
-              :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
-              :outputColorRight=trial.rightColor
-              :outputTypeRight='getType(trial.rightColor)'
-          />
-        </Slide>
-      </Screen>
-        <Screen>
-          <Slide>
-            Press the button to see Alice's game:
-            <NonLeakyUrns
-                firstColorLeft='red'
-                :firstTypeLeft='getType("red")'
-                secondColorLeft='blue'
-                :secondTypeLeft='getType("blue")'
-                firstColorRight='yellow'
-                :firstTypeRight='getType("yellow")'
-                secondColorRight='green'
-                :secondTypeRight='getType("green")'
-                :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
-                :outputColorLeft=trial.leftColor
-                :outputTypeLeft='getType(trial.leftColor)'
-                :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
-                :outputColorRight=trial.rightColor
-                :outputTypeRight='getType(trial.rightColor)'
-                :enabled="false"
-            />
-
-            Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
-            <br/>
-            <p>
-              Do you agree with the following statements?
-            </p>
-
-            <p>
-              <b>The <span :class="trial.leftColor">{{ trial.leftColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
-            </p>
-            <RatingInput
-                left="strongly disagree"
-                :response.sync="$magpie.measurements.X"
-                right="strongly agree"
-            />
-
-            <p>
-              <b>The <span :class="trial.rightColor">{{ trial.rightColor }}</span> ball caused Alice to {{ trial.gameOutcome }}.</b>
-            </p>
-            <RatingInput
-                left="strongly disagree"
-                :response.sync="$magpie.measurements.X"
-                right="strongly agree"
-            />
-            <button @click="$magpie.saveAndNextScreen()">Submit</button>
-
-          </Slide>
-        </Screen>
-
-
+      <TrialScreens :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
     </template>
 
     <SubmitResultsScreen/>
@@ -270,13 +132,15 @@
 
 <script>
 import _ from "lodash";
-import NonLeakyUrns from "./NonLeakyUrns.vue";
-import Ball from "./Ball.vue";
+import TrialScreens from "./TrialScreen.vue";
+import NonLeakyUrns from "../../00-customComponents/NonLeakyUrns.vue";
+import Urn from "../../00-customComponents/Urn.vue";
+import Ball from "../../00-customComponents/Ball.vue";
 
 import training_trials_all from "../trials/training_trials.csv";
 import main_trials_all from "../trials/main_trials.csv";
 import comprehension_all from "../trials/comprehension.csv";
-import Urn from "./Urn.vue";
+
 
 const structure = _.shuffle(["conjunctive", "disjunctive"])[0];
 
@@ -302,7 +166,7 @@ const comprehension = _.filter(comprehension_all, function (i) {
 
 export default {
   name: "App",
-  components: {Urn, NonLeakyUrns, Ball},
+  components: {TrialScreens,Urn, NonLeakyUrns, Ball},
   data() {
     return {
       structure: structure,
@@ -392,12 +256,20 @@ export default {
   gap: 50px;
 }
 
-.red {color: #B22222;}
+.red {
+  color: #B22222;
+}
 
-.yellow {color: #EEB14F;}
+.yellow {
+  color: #EEB14F;
+}
 
-.green {color: #3C902B;}
+.green {
+  color: #3C902B;
+}
 
-.blue {color: #3A4FB4;}
+.blue {
+  color: #3A4FB4;
+}
 
 </style>

@@ -145,7 +145,7 @@ function runGame() {
   }, fixationTiming);
 
   setTimeout(() => {
-    $magpie.nextScreen();
+    $magpie.nextSlide();
   }, fixationTiming + 1000);
 }
 

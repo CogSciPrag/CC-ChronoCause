@@ -59,21 +59,21 @@ defineProps({
   --name: 'B';
 }
 
-.ball::before{
+.ball::before {
   content: var(--name);
 }
 
-.solid{
+.solid {
   background-color: var(--color);
 }
 
-.stripe{
+.stripe {
   background: linear-gradient(
       to bottom,
       #fff 0 20%,
       var(--color) 20% 80%,
       #fff 80% 100%
-    );
+  );
 }
 </style>
 
