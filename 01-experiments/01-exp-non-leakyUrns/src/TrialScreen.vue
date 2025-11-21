@@ -3,12 +3,12 @@
 import NonLeakyUrns from "../../00-customComponents/NonLeakyUrns.vue";
 
 defineProps({
+  trialType: String,
   trial: Object,
   index: Number,
   getType: Function,
   getDelay: Function
 });
-
 
 </script>
 
@@ -87,7 +87,7 @@ defineProps({
 
       <Record
           :data="{
-              trialType : 'critical',
+              trialType : trialType,
               trialNr : 1,
               structure:trial.structure,
               leftColor: trial.leftColor,

@@ -10,11 +10,8 @@
 
     <InstructionScreen :titles="'Game Rules'">
       <p>
-        In the game, the player sees two urns, both of which contain
-        <b style="color: orange">orange</b> and <b>black</b> balls. In each urn
-        there are 10 balls: 5 of the balls are
-        <b style="color: orange">orange</b>, and 5 of the balls are
-        <b>black</b>.
+        In the game, the player sees two urns, which each contain both <b>solid</b> and <b>striped</b> balls.
+        There are always 10 balls in each urn: 5 of the balls are solid, and 5 are striped.
       </p>
 
       <div class="urns">
@@ -42,7 +39,7 @@
         {{
           structure == "conjunctive" ? "BOTH balls are" : "AT LEAST ONE ball is"
         }}
-        <b style="color: orange">orange</b>.
+        <b>solid</b>.
         <br/>
         Here are the possible outcomes:
       </p>
@@ -72,9 +69,13 @@
       <Screen>
         <Slide>
           Remember the rule that determines the sound that the machine makes:
-          <div style="color: gray">
-            TODO ADD RULE
-          </div>
+          <p style="color: gray">
+            The player wins just in case in case
+        {{
+          structure == "conjunctive" ? "BOTH balls are" : "AT LEAST ONE ball is"
+            }} <b>solid</b>.
+
+          </p>
 
           To make sure you understand, please select whether a player would win or lose when the following balls are
           released:
@@ -115,7 +116,7 @@
       <p>Let’s practice this first!</p>
     </InstructionScreen>
     <template v-for="(trial, i) of training_trials">
-      <TrialScreens :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
+      <TrialScreens trialType="training" :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
     </template>
 
     <InstructionScreen :title="'Instructions'">
@@ -123,7 +124,7 @@
     </InstructionScreen>
 
     <template v-for="(trial, i) of main_trials">
-      <TrialScreens :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
+      <TrialScreens trialType="critical" :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
     </template>
 
     <SubmitResultsScreen/>
@@ -142,14 +143,16 @@ import main_trials_all from "../trials/main_trials.csv";
 import comprehension_all from "../trials/comprehension.csv";
 
 
-const structure = _.shuffle(["conjunctive", "disjunctive"])[0];
+const structure = _.sample(["conjunctive", "disjunctive"]);
 
 const main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
   return i.structure == structure;
 }));
+
 main_trials.forEach(trial => {
   trial['delayedUrn'] = _.sample(['left', 'right']);
 });
+
 const training_trials = _.filter(training_trials_all, function (i) {
   return i.structure == structure;
 });
@@ -157,9 +160,7 @@ const training_trials = _.filter(training_trials_all, function (i) {
 training_trials.forEach(trial => {
   trial['delayedUrn'] = _.sample(['left', 'right']);
 });
-console.log(training_trials_all);
-console.log(structure);
-console.log(training_trials);
+
 const comprehension = _.filter(comprehension_all, function (i) {
   return i.structure == structure;
 });
