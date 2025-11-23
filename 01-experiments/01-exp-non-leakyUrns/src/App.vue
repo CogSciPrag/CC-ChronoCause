@@ -2,16 +2,43 @@
   <Experiment title="ChronoCause">
 
     <InstructionScreen :title="'Welcome'">
-      Hi! Thanks for taking part! In this experiment, you will be introduced to
-      a simple game. Then, you will see a few rounds of the game being played
-      and you will be asked to make some judgements.
+      Hi, thanks for taking part!
+      In this experiment, you will be introduced to a simple game.
+      Then, you will see a few rounds of the game being played and you will be asked to make some judgements.
       <div class="pool-ball"></div>
     </InstructionScreen>
 
     <InstructionScreen :titles="'Game Rules'">
       <p>
-        In the game, the player sees two urns, which each contain both <b>solid</b> and <b>striped</b> balls.
-        There are always 10 balls in each urn: 5 of the balls are solid, and 5 are striped.
+        In the game, the player sees these two urns, which each contain both <b>solid</b> and <b>striped</b> balls.
+        There are always the same 10 balls in each urn: 5 of the balls are solid, and 5 are striped.
+      </p>
+
+      <div class="urns">
+        <Urn
+            firstColor='red'
+            :firstType='getType("red")'
+            :firstCount=5
+            secondColor='blue'
+            :secondType='getType("blue")'
+            :secondCount=5
+
+        />
+        <Urn
+            firstColor='yellow'
+            :firstType='getType("yellow")'
+            :firstCount=5
+            secondColor='green'
+            :secondType='getType("green")'
+            :secondCount=5
+        />
+      </div>
+    </InstructionScreen>
+
+    <InstructionScreen :titles="'Game Rules'">
+      <p>
+        In the game, the player sees these two urns, which each contain both <b>solid</b> and <b>striped</b> balls.
+        There are always the same 10 balls in each urn: 5 of the balls are solid, and 5 are striped.
       </p>
 
       <div class="urns">
@@ -36,8 +63,10 @@
       <p>
         When the player presses the button, a ball is released from each urn.
         The player wins just in case
-        {{
-          structure == "conjunctive" ? "BOTH balls are" : "AT LEAST ONE ball is"
+        <b>{{
+            structure == "conjunctive" ? "both" : "at least one"
+          }}</b> {{
+          structure == "conjunctive" ? "balls are" : "ball is"
         }}
         <b>solid</b>.
         <br/>
@@ -65,15 +94,18 @@
       </div>
     </InstructionScreen>
 
+
     <template v-for="(trial, i) in comprehension">
       <Screen>
         <Slide>
-          Remember the rule that determines the sound that the machine makes:
-          <p style="color: gray">
-            The player wins just in case in case
-        {{
-          structure == "conjunctive" ? "BOTH balls are" : "AT LEAST ONE ball is"
-            }} <b>solid</b>.
+          <p>
+            Remember, the player wins just in case in case
+            <b>{{
+                structure == "conjunctive" ? "both" : "at least one"
+              }}</b> {{
+              structure == "conjunctive" ? "balls are" : "ball is"
+            }}
+            <b>solid</b>.
 
           </p>
 
@@ -98,8 +130,7 @@
               leftColor : trial.leftColor,
               rightColor : trial.rightColor,
               response : $magpie.measurements.response,
-              structure : structure,
-              fixedTerminology: true
+              structure : structure
             }"
           />
 
@@ -116,7 +147,7 @@
       <p>Let’s practice this first!</p>
     </InstructionScreen>
     <template v-for="(trial, i) of training_trials">
-      <TrialScreens trialType="training" :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
+      <TrialScreens trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType" :getDelay="getDelay"/>
     </template>
 
     <InstructionScreen :title="'Instructions'">
@@ -124,7 +155,7 @@
     </InstructionScreen>
 
     <template v-for="(trial, i) of main_trials">
-      <TrialScreens trialType="critical" :trial="trial" :index="i" :getType="getType" :getDelay="getDelay" />
+      <TrialScreens trialType="critical" :trial="trial" :index="i"  :length="main_trials.length" :getType="getType" :getDelay="getDelay"/>
     </template>
 
     <SubmitResultsScreen/>
@@ -167,7 +198,7 @@ const comprehension = _.filter(comprehension_all, function (i) {
 
 export default {
   name: "App",
-  components: {TrialScreens,Urn, NonLeakyUrns, Ball},
+  components: {TrialScreens, Urn, NonLeakyUrns, Ball},
   data() {
     return {
       structure: structure,

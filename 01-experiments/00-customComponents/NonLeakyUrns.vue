@@ -126,6 +126,7 @@ const fixationVisible = ref(false);
 
 
 function runGame() {
+  $magpie.measurements.beginClicked = Date.now();
   const fixationTiming =
       props.timingLeft > props.timingRight ? props.timingLeft : props.timingRight;
 

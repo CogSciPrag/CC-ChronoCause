@@ -6,14 +6,20 @@ defineProps({
   trialType: String,
   trial: Object,
   index: Number,
+  length: Number,
   getType: Function,
   getDelay: Function
 });
 
+function saveAndNextScreenTimeLog() {
+  $magpie.measurements.submitClicked = Date.now();
+  $magpie.saveAndNextScreen();
+}
+
 </script>
 
 <template>
-  <Screen>
+  <Screen :progress="index/length">
     <Slide>
       Press the button to see Alice's game:
       <NonLeakyUrns
@@ -82,13 +88,13 @@ defineProps({
 
       />
       <p v-if="$magpie.measurements.responseLeft > 0 && $magpie.measurements.responseRight > 0">
-        <button @click="$magpie.saveAndNextScreen();">Submit</button>
+        <button @click="saveAndNextScreenTimeLog">Submit</button>
       </p>
 
       <Record
           :data="{
               trialType : trialType,
-              trialNr : 1,
+              trialNr : index + 1,
               structure:trial.structure,
               leftColor: trial.leftColor,
               rightColor: trial.rightColor,
@@ -97,7 +103,8 @@ defineProps({
               delayedUrn: trial.delayedUrn,
               responseLeft: $magpie.measurements.responseLeft,
               responseRight: $magpie.measurements.responseRight,
-              fixedTerminology: true
+              beginClicked: $magpie.measurements.beginClicked,
+              submitClicked: $magpie.measurements.submitClicked
             }"
       />
     </Slide>
