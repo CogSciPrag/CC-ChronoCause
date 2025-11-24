@@ -158,7 +158,8 @@
       <TrialScreens trialType="critical" :trial="trial" :index="i"  :length="main_trials.length" :getType="getType" :getDelay="getDelay"/>
     </template>
 
-    <SubmitResultsScreen/>
+    <PostTestScreen />
+    <SubmitResultsScreen />
   </Experiment>
 </template>
 
