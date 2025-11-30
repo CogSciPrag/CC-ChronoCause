@@ -1,14 +1,12 @@
 <!--
-TODO: update
-A ball of a specified color, with the initial letter of the color’s name on it.
+A ball of a specified color, bearing the initial letter of its name, is similar to a billiard ball and comes in solid and striped varieties.
 
 Parameters:
-':color' - color of the ball. Options: orange, black, green, red, yellow, blue
+  'color' - color of the ball; Options: black, green, red, yellow, blue
+  'type' - type of the ball; Options: solid, stripe
 
 Example usage:
-
-<Ball color="orange"/>
-
+  <Ball color="black" type="solid"/>
 -->
 
 <script setup>
@@ -16,9 +14,16 @@ import Vue from "vue";
 import Component from "vue-class-component";
 
 defineProps({
-  color: String,
-  type: String
-});
+  color: {
+    type: String,
+    default: 'black'
+  },
+  type: {
+    type: String,
+    default: 'solid'
+  }
+})
+
 </script>
 
 <template>
@@ -26,6 +31,7 @@ defineProps({
 </template>
 
 <style scoped>
+
 .ball {
   height: 40px;
   width: 40px;
@@ -38,6 +44,10 @@ defineProps({
   border: 1px solid darkgrey;
 }
 
+.black {
+  --color: #000000;
+  --name: 'B';
+}
 
 .red {
   --color: #B22222;

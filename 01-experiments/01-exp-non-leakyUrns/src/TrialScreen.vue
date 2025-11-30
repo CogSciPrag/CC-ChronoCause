@@ -1,3 +1,20 @@
+<!--
+Screen with multiple slides representing one trial (both main and training)
+
+Parameters:
+  'trialType' - description of the trial in the output csv
+  'trial' - current trial object
+  'index' - index of current trial
+  'length' - number of either main or training trials
+  'getType' - used to pass the getType function defined in App.vue
+  'getDelay' - used to pass the getDelay function defined in App.vue
+
+Example usage:
+  <template v-for="(trial, i) of training_trials">
+    <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType" :getDelay="getDelay"/>
+  </template>
+-->
+
 <script setup>
 
 import NonLeakyUrns from "../../00-customComponents/NonLeakyUrns.vue";
@@ -62,12 +79,22 @@ function saveAndNextScreenTimeLog() {
 
       Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
       <br/>
+
+      <p>
+        Which ball was released first?
+
+        <ForcedChoiceInput
+            :response.sync="$magpie.measurements.responseAttention"
+            :options="[trial.leftColor, trial.rightColor]"
+            @update:response="saveComprehensionResponse($magpie.measurements.responseAttention,trial.correctResponse)"/>
+      </p>
+
       <p>
         Do you agree with the following statements?
       </p>
 
       <p>
-        <b>The <span :class="trial.leftColor">{{ trial.leftColor }}</span> ball caused Alice to {{
+        <b>Getting a {{ trial.leftColor }} ball caused Alice to {{
             trial.gameOutcome
           }}.</b>
       </p>
@@ -78,7 +105,7 @@ function saveAndNextScreenTimeLog() {
       />
 
       <p>
-        <b>The <span :class="trial.rightColor">{{ trial.rightColor }}</span> ball caused Alice to
+        <b>Getting a {{ trial.rightColor }} ball caused Alice to
           {{ trial.gameOutcome }}.</b>
       </p>
       <RatingInput
@@ -104,7 +131,9 @@ function saveAndNextScreenTimeLog() {
               responseLeft: $magpie.measurements.responseLeft,
               responseRight: $magpie.measurements.responseRight,
               beginClicked: $magpie.measurements.beginClicked,
-              submitClicked: $magpie.measurements.submitClicked
+              submitClicked: $magpie.measurements.submitClicked,
+              responseAttention: $magpie.measurements.responseAttention,
+              correctResponseAttention: $magpie.measurements.responseAttention == '' ? (trial.delayedUrn == 'left' ? trial.rightColor : trial.leftColor) : null,
             }"
       />
     </Slide>

@@ -1,20 +1,23 @@
 <!--
-TODO: update
-An urn with balls of two given colors.
+An urn with two kinds of balls (Ball.vue).
 
 Parameters:
-':firstColor:' - color of balls in the left column in the urn
-':secondColor:' - color of balls in the right column in the urn
-':firstCount:' - number of balls in the left column in the urn
-':secondCount:' - number of balls in the right column in the urn
+  'firstColor' - color of balls in the left column in the urn; Options: as defined in Ball.vue
+  'secondColor' - color of balls in the right column in the urn; Options: as defined in Ball.vue
+  'firstCount' - number of balls in the left column in the urn;
+  'secondCount' - number of balls in the right column in the urn;
+  'firstType' - type of balls in the left column in the urn; Options: as defined in Ball.vue
+  'secondType' - type of balls in the right column in the urn; Options: as defined in Ball.vue
 
 Example usage:
-<Urn
-  firstColor="black"
-  secondColor="orange"
-  :firstCount="3"
-  :secondCount="2"
-/>
+  <Urn
+    firstColor="green"
+    secondColor="red"
+    :firstCount="3"
+    :secondCount="2"
+    firstType="solid"
+    secondType="stripe"
+  />
 
 -->
 

@@ -1,33 +1,53 @@
 <!--
-TODO: update docs
-
-The component is comprised of two urns with a variable number of black and orange marbles.
+A component with two urns (Urn.vue). with two kinds of balls (Ball.vue).
 After the user presses the button, balls with specified colors appear under each urn.
 Each can appear with a specified delay.
 The indicator shows that the game is underway; it stops when the longer delay has elapsed.
 
-(Optional) parameters:
-':timingLeft' - delay with which a ball is 'released' from the left urn; Value: time in ms; default: 1000
-':timingRight' - delay with which a ball is 'released' from the right urn; Value: time in ms; default: 1000
-':outputLeft' - color of ball released from the left urn; Options: orange, black; default: orange
-':outputRight' - color of ball released from the right urn; Options: orange, black; default: orange
-':countOrangeLeft' - number of orange balls in the left urn: Value: number of balls; default: 5
-':countOrangeRight' - number of orange balls in the right urn: Value: number of balls; default: 5
-':countBlackLeft'- number of black balls in the left urn: Value: number of balls; default: 5
-':countOrangeRight'- number of black balls in the right urn: Value: number of balls; default: 5
+Parameters:
+  'timingLeft' - delay with which a ball is released from the left urn; Value: time in ms
+  'timingRight' - delay with which a ball is released from the right urn; Value: time in ms
+  'firstColorLeft' - color of balls in the left column of the left urn; Options: as defined in Urn.vue
+  'secondColorLeft' - color of balls in the right column of the left urn; Options: as defined in Urn.vue
+  'firstColorRight' - color of balls in the left column of the right urn; Options: as defined in Urn.vue
+  'secondColorRight' - color of balls in the right column of the right urn; Options: as defined in Urn.vue
+  'firstTypeLeft' - type of balls in the left column of the left urn; Options: as defined in Urn.vue
+  'secondTypeLeft' - type of balls in the right column of the left urn; Options: as defined in Urn.vue
+  'firstTypeRight' - type of balls in the left column of the right urn; Options: as defined in Urn.vue
+  'secondTypeRight' - type of balls in the right column of the right urn; Options: as defined in Urn.vue
+  'firstCountLeft' - number of balls in the left column of the left urn; Value: number
+  'secondCountLeft' - number of balls in the right column of the left urn; Value: number
+  'firstCountRight' - number of balls in the left column of the right urn; Value: number
+  'secondCountRight' - number of balls in the right column of the right urn; Value: number
+  'enabled' - if not enabled, the output balls are visible and the user cannot run the animation: Value: boolean
+  'outputColorLeft' - colour of a ball released from the left urn; Options: as defined in Urn.vue
+  'outputColorRight' - colour of a ball released from the left urn; Options: as defined in Urn.vue
+  'outputTypeLeft' - type of a ball released from the left urn; Options: as defined in Urn.vue
+  'outputTypeRight' - type of a ball released from the left urn; Options: as defined in Urn.vue
+
 
 Example usage:
-
-<NonLeakyUrns
-  :timingLeft="1000"
-  :timingRight="3000"
-  :outputLeft="orange"
-  :outputRight="black"
-  :countOrangeLeft="3"
-  :countOrangeRight="5"
-  :countBlackLeft="2"
-  :countBlackRight="5"
-/>
+  <NonLeakyUrns
+    :timingLeft="1000"
+    :timingRight="3000"
+    firstColorLeft="red"
+    secondColorLeft="green"
+    firstColorRight="blue"
+    secondColorRight="yellow"
+    firstTypeLeft="solid"
+    secondTypeLeft="stripe"
+    firstTypeRight="solid"
+    secondTypeRight="stripe"
+    :firstCountLeft="5"
+    :secondCountLeft="5"
+    :firstCountRight="5"
+    :secondCountRight="5"
+    :enabled="true"
+    outputColorLeft="red"
+    outputColorRight="yellow"
+    outputTypeLeft="solid"
+    outputTypeRight="stripe"
+  />
 
 -->
 
@@ -124,7 +144,6 @@ const rightBallVisible = props.enabled ? ref(false) : ref(true);
 const beginBtnVisible = props.enabled ? ref(true) : ref(false);
 const fixationVisible = ref(false);
 
-
 function runGame() {
   $magpie.measurements.beginClicked = Date.now();
   const fixationTiming =
@@ -155,12 +174,10 @@ function runGame() {
 
 <template>
   <div class="game">
-
     <div class="btnSpace">
       <button v-if="beginBtnVisible" @click="runGame">Begin</button>
     </div>
     <div class="gamedisplay">
-
       <Urn
           :firstColor="firstColorLeft"
           :firstType="firstTypeLeft"
@@ -169,7 +186,6 @@ function runGame() {
           :secondType="secondTypeLeft"
           :secondCount="secondCountLeft"
           class="leftUrn"/>
-
       <Urn
           :firstColor="firstColorRight"
           :firstType="firstTypeRight"
