@@ -33,6 +33,12 @@ function saveAndNextScreenTimeLog() {
   $magpie.saveAndNextScreen();
 }
 
+function saveAndNextSlideTimeLog() {
+  $magpie.measurements.submitClicked = Date.now();
+  $magpie.saveMeasurements();
+  $magpie.nextSlide();
+}
+
 </script>
 
 <template>
@@ -48,12 +54,64 @@ function saveAndNextScreenTimeLog() {
           :firstTypeRight='getType("yellow")'
           secondColorRight='green'
           :secondTypeRight='getType("green")'
-          :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
+        :timingLeft="trial.delayedUrn != 'left'? getDelay('base') : getDelay(trial.delay)"
           :outputColorLeft=trial.leftColor
           :outputTypeLeft='getType(trial.leftColor)'
-          :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
+          :timingRight="trial.delayedUrn != 'left'? getDelay(trial.delay) : getDelay('base')"
           :outputColorRight=trial.rightColor
           :outputTypeRight='getType(trial.rightColor)'
+      />
+    </Slide>
+
+    <Slide v-if="trial.attentionCheck">
+      Press the button to see Alice's game:
+      <NonLeakyUrns
+          firstColorLeft='red'
+          :firstTypeLeft='getType("red")'
+          secondColorLeft='blue'
+          :secondTypeLeft='getType("blue")'
+          firstColorRight='yellow'
+          :firstTypeRight='getType("yellow")'
+          secondColorRight='green'
+          :secondTypeRight='getType("green")'
+          :outputColorLeft=trial.leftColor
+          :outputTypeLeft='getType(trial.leftColor)'
+          :outputColorRight=trial.rightColor
+          :outputTypeRight='getType(trial.rightColor)'
+          :enabled="false"
+      />
+
+      Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
+      <br/>
+
+      <p>
+        Which ball was released first?
+        <MultipleChoiceInput
+            :response.sync="$magpie.measurements.responseAttention"
+            :options="[
+                'The ' + trial.leftColor + ' ball',
+                'The ' + trial.rightColor + ' ball',
+                'Both balls were released at the same time']"/>
+
+        <button v-if="$magpie.measurements.responseAttention"  @click="saveAndNextSlideTimeLog">Submit</button>
+      </p>
+
+      <Record
+          :data="{
+              trialType : trialType + '-attention',
+              trialNr : index + 1,
+              structure:trial.structure,
+              leftColor: trial.leftColor,
+              rightColor: trial.rightColor,
+              gameOutcome: trial.gameOutcome,
+              delay: trial.delay,
+              delayedUrn: trial.delayedUrn,
+              beginClicked: $magpie.measurements.beginClicked,
+              submitClicked: $magpie.measurements.submitClicked,
+              responseAttention: $magpie.measurements.responseAttention,
+              correctResponseAttention: trial.delayedUrn == 'none' ? 'Both balls were released at the same time':
+              (trial.delayedUrn =='left' ? 'The ' + trial.rightColor + ' ball' : 'The ' + trial.leftColor + ' ball')
+            }"
       />
     </Slide>
 
@@ -68,10 +126,8 @@ function saveAndNextScreenTimeLog() {
           :firstTypeRight='getType("yellow")'
           secondColorRight='green'
           :secondTypeRight='getType("green")'
-          :timingLeft="trial.delayedUrn === 'right'? getDelay('base') : getDelay(trial.delay)"
           :outputColorLeft=trial.leftColor
           :outputTypeLeft='getType(trial.leftColor)'
-          :timingRight="trial.delayedUrn === 'right'? getDelay(trial.delay) : getDelay('base')"
           :outputColorRight=trial.rightColor
           :outputTypeRight='getType(trial.rightColor)'
           :enabled="false"
@@ -79,15 +135,6 @@ function saveAndNextScreenTimeLog() {
 
       Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
       <br/>
-
-      <p>
-        Which ball was released first?
-
-        <ForcedChoiceInput
-            :response.sync="$magpie.measurements.responseAttention"
-            :options="[trial.leftColor, trial.rightColor]"
-            @update:response="saveComprehensionResponse($magpie.measurements.responseAttention,trial.correctResponse)"/>
-      </p>
 
       <p>
         Do you agree with the following statements?
@@ -131,9 +178,7 @@ function saveAndNextScreenTimeLog() {
               responseLeft: $magpie.measurements.responseLeft,
               responseRight: $magpie.measurements.responseRight,
               beginClicked: $magpie.measurements.beginClicked,
-              submitClicked: $magpie.measurements.submitClicked,
-              responseAttention: $magpie.measurements.responseAttention,
-              correctResponseAttention: $magpie.measurements.responseAttention == '' ? (trial.delayedUrn == 'left' ? trial.rightColor : trial.leftColor) : null,
+              submitClicked: $magpie.measurements.submitClicked
             }"
       />
     </Slide>

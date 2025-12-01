@@ -2,6 +2,7 @@
   <Experiment title="ChronoCause">
 
     <InstructionScreen :title="'Welcome'">
+
       Hi, thanks for taking part!
       In this experiment, you will be introduced to a simple game.
       Then, you will see a few rounds of the game being played and you will be asked to make some judgements.
@@ -100,13 +101,85 @@
         <Slide>
           <p>
             Remember, the player wins just in case in case
-            <b>{{
-                structure == "conjunctive" ? "both" : "at least one"
-              }}</b> {{
-              structure == "conjunctive" ? "balls are" : "ball is"
-            }}
+            <b>{{ structure == "conjunctive" ? "both" : "at least one" }}</b>
+            {{ structure == "conjunctive" ? "balls are" : "ball is" }}
             <b>solid</b>.
+          </p>
 
+          To make sure you understand, please select whether a player would win or lose when the following balls are
+          released:
+
+          <p class="outcomeBalls">
+            <Ball class="col" :color="trial.leftColor" :type="getType(trial.leftColor)"/>
+            <Ball clas="col" :color="trial.rightColor" :type="getType(trial.rightColor)"/>
+          </p>
+
+          <ForcedChoiceInput
+              :response.sync="$magpie.measurements.response"
+              :options="['win', 'lose']"
+              @update:response="saveComprehensionResponse($magpie.measurements.response,trial.correctResponse)"/>
+
+          <Record
+              :data="{
+              trialType : 'comprehension-1',
+              trialNr : i+1,
+              correctResponse: trial.correctResponse,
+              leftColor : trial.leftColor,
+              rightColor : trial.rightColor,
+              response : $magpie.measurements.response,
+              structure : structure
+            }"
+          />
+        </Slide>
+      </Screen>
+    </template>
+
+    <InstructionScreen>
+      <p v-if="comprehensionPassed">Great, you understood the task! Let’s begin.</p>
+
+      <p v-if="!comprehensionPassed"> Oops! You made a mistake.<br/>
+        Remember, the player wins just in case
+        <b>{{
+            structure == "conjunctive" ? "both" : "at least one"
+          }}</b> {{
+          structure == "conjunctive" ? "balls are" : "ball is"
+        }}
+        <b>solid</b>.
+        <br/>
+        Here are the possible outcomes:
+      </p>
+      <div v-if="!comprehensionPassed" class="outcomes">
+        <div class="col">
+          <Ball color="red" :type='getType("red")'/>
+          <Ball color="blue" :type='getType("blue")'/>
+          <Ball color="red" :type='getType("red")'/>
+          <Ball color="blue" :type='getType("blue")'/>
+        </div>
+        <div class="col">
+          <Ball color="yellow" :type='getType("yellow")'/>
+          <Ball color="yellow" :type='getType("yellow")'/>
+          <Ball color="green" :type='getType("green")'/>
+          <Ball color="green" :type='getType("green")'/>
+        </div>
+        <div class="col">
+          <p>WIN</p>
+          <p>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
+          <p>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
+          <p>LOSE</p>
+        </div>
+      </div>
+      <p v-if="!comprehensionPassed">Let’s try again!
+      </p>
+    </InstructionScreen>
+
+    <template v-if="!comprehensionPassed" v-for="(trial, i) in comprehension">
+      <Screen>
+        <Slide>
+          <p>
+            Remember, the player wins just in case in case
+            <b>{{ structure == "conjunctive" ? "both" : "at least one" }}</b>
+            {{ structure == "conjunctive" ? "balls are" : "ball is" }}
+            <b>solid</b>.
           </p>
 
           To make sure you understand, please select whether a player would win or lose when the following balls are
@@ -124,7 +197,7 @@
 
           <Record
               :data="{
-              trialType : 'comprehension',
+              trialType : 'comprehension-2',
               trialNr : i+1,
               correctResponse: trial.correctResponse,
               leftColor : trial.leftColor,
@@ -133,21 +206,22 @@
               structure : structure
             }"
           />
-
         </Slide>
       </Screen>
     </template>
 
-
     <InstructionScreen :title="'Instructions'">
       <p>
         In this experiment, Alice will be playing the game.
+        
         You will see a few rounds, and after each round, you will be asked to judge several statements.
       </p>
       <p>Let’s practice this first!</p>
     </InstructionScreen>
+
     <template v-for="(trial, i) of training_trials">
-      <TrialScreens trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType" :getDelay="getDelay"/>
+      <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType"
+                   :getDelay="getDelay"/>
     </template>
 
     <InstructionScreen :title="'Instructions'">
@@ -155,20 +229,23 @@
     </InstructionScreen>
 
     <template v-for="(trial, i) of main_trials">
-      <TrialScreens trialType="critical" :trial="trial" :index="i"  :length="main_trials.length" :getType="getType" :getDelay="getDelay"/>
+      <TrialScreen trialType="critical" :trial="trial" :index="i" :length="main_trials.length" :getType="getType"
+                   :getDelay="getDelay"/>
     </template>
 
-    <PostTestScreen />
-    <SubmitResultsScreen />
+    <PostTestScreen/>
+    <SubmitResultsScreen/>
   </Experiment>
 </template>
 
 <script>
 import _ from "lodash";
-import TrialScreens from "./TrialScreen.vue";
+
 import NonLeakyUrns from "../../00-customComponents/NonLeakyUrns.vue";
 import Urn from "../../00-customComponents/Urn.vue";
 import Ball from "../../00-customComponents/Ball.vue";
+
+import TrialScreen from "./TrialScreen.vue";
 
 import training_trials_all from "../trials/training_trials.csv";
 import main_trials_all from "../trials/main_trials.csv";
@@ -177,13 +254,24 @@ import comprehension_all from "../trials/comprehension.csv";
 
 const structure = _.sample(["conjunctive", "disjunctive"]);
 
-const main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
+let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
   return i.structure == structure;
 }));
-
 main_trials.forEach(trial => {
-  trial['delayedUrn'] = _.sample(['left', 'right']);
+
+  if (trial['delay'] == 'simult') {
+    trial['delayedUrn'] = 'none';
+  } else {
+    trial['delayedUrn'] = _.sample(['left', 'right']);
+  }
 });
+
+// add attention checks
+main_trials[2]['attentionCheck'] = true
+main_trials[5]['attentionCheck'] = true
+main_trials[8]['attentionCheck'] = true
+
+console.log(main_trials);
 
 const training_trials = _.filter(training_trials_all, function (i) {
   return i.structure == structure;
@@ -199,13 +287,14 @@ const comprehension = _.filter(comprehension_all, function (i) {
 
 export default {
   name: "App",
-  components: {TrialScreens, Urn, NonLeakyUrns, Ball},
+  components: {TrialScreen, Urn, NonLeakyUrns, Ball},
   data() {
     return {
       structure: structure,
       main_trials: main_trials,
       training_trials: training_trials,
       comprehension: comprehension,
+      comprehensionPassed: true
     };
   },
   methods: {
@@ -234,13 +323,17 @@ export default {
           delay = 1000;
           break;
         case 'short':
-          delay = 2000;
+          delay = 3000;
           break;
         case 'long':
-          delay = 3000;
+          delay = 7000;
           break;
       }
       return delay;
+    },
+    saveComprehensionResponse: function (response, correctResponse) {
+      this.comprehensionPassed = this.comprehensionPassed && (response == correctResponse);
+      $magpie.saveAndNextScreen();
     }
   },
   computed: {

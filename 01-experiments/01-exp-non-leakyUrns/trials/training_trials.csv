@@ -1,5 +1,5 @@
-id,structure,leftColor,rightColor,gameOutcome,delay
-1,conjunctive,red,yellow,win,simult
-2,conjunctive,blue,yellow,lose,short
-3,disjunctive,red,green,win,simult
-4,disjunctive,blue,green,lose,short
+id,structure,leftColor,rightColor,gameOutcome,delay,attentionCheck
+1,conjunctive,red,yellow,win,simult,true
+2,conjunctive,blue,yellow,lose,short,true
+3,disjunctive,red,green,win,simult,true
+4,disjunctive,blue,green,lose,short,true
