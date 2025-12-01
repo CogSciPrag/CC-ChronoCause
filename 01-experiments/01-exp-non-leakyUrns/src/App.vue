@@ -284,9 +284,9 @@ training_trials.forEach(trial => {
   trial['delayedUrn'] = _.sample(['left', 'right']);
 });
 
-const comprehension = _.filter(comprehension_all, function (i) {
+const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
   return i.structure == structure;
-});
+}));
 
 export default {
   name: "App",
