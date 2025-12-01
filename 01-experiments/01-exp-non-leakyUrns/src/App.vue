@@ -213,8 +213,11 @@
     <InstructionScreen :title="'Instructions'">
       <p>
         In this experiment, Alice will be playing the game.
-        
         You will see a few rounds, and after each round, you will be asked to judge several statements.
+      </p>
+      <p>
+        <b>Pay close attention</b> to when the balls are released from either of the two urns, as they may be released
+        at different times.
       </p>
       <p>Let’s practice this first!</p>
     </InstructionScreen>
