@@ -57,10 +57,10 @@ df <- df %>%
                   ifelse(is.na(correctResponseAttention), 1,
                          correctResponseAttention==responseAttention))
 
-# identify participants failing comprehension questions
-# 0 - passed comprehension questions
-# 1 - failed first round
-# 2 failed both rounds
+# identify participants that failed comprehension questions
+# 0 - passed all comprehension questions
+# 1 - failed in the first round
+# 2 - failed in both rounds
 
 # TODO
 
