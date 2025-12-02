@@ -44,7 +44,7 @@ function saveAndNextSlideTimeLog() {
 <template>
   <Screen :progress="index/length">
     <Slide>
-      Press the button to see Alice's game:
+      Press the button to start a new round of Alice's game:
       <NonLeakyUrns
           firstColorLeft='red'
           :firstTypeLeft='getType("red")'
@@ -64,7 +64,7 @@ function saveAndNextSlideTimeLog() {
     </Slide>
 
     <Slide v-if="trial.attentionCheck">
-      Press the button to see Alice's game:
+      Press the button to start a new round of Alice's game:
       <NonLeakyUrns
           firstColorLeft='red'
           :firstTypeLeft='getType("red")'
@@ -116,7 +116,7 @@ function saveAndNextSlideTimeLog() {
     </Slide>
 
     <Slide>
-      Press the button to see Alice's game:
+      Press the button to start a new round of Alice's game:
       <NonLeakyUrns
           firstColorLeft='red'
           :firstTypeLeft='getType("red")'

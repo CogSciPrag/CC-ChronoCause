@@ -261,7 +261,6 @@ let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
   return i.structure == structure;
 }));
 main_trials.forEach(trial => {
-
   if (trial['delay'] == 'simult') {
     trial['delayedUrn'] = 'none';
   } else {
@@ -274,14 +273,16 @@ main_trials[2]['attentionCheck'] = true
 main_trials[5]['attentionCheck'] = true
 main_trials[8]['attentionCheck'] = true
 
-console.log(main_trials);
-
 const training_trials = _.filter(training_trials_all, function (i) {
   return i.structure == structure;
 });
 
 training_trials.forEach(trial => {
-  trial['delayedUrn'] = _.sample(['left', 'right']);
+    if (trial['delay'] == 'simult') {
+    trial['delayedUrn'] = 'none';
+  } else {
+    trial['delayedUrn'] = _.sample(['left', 'right']);
+  }
 });
 
 const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
