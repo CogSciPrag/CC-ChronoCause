@@ -1,0 +1,74 @@
+submission_id,age,beginClicked,comments,correctResponse,correctResponseAttention,delay,delayedUrn,education,experiment_duration,experiment_end_time,experiment_start_time,gameOutcome,gender,languages,leftColor,response,responseAttention,responseLeft,responseRight,responseTime,rightColor,structure,submitClicked,trialNr,trialType
+2050,32,NA,,win,NA,NA,NA,Higher degree,861722,1764627390895,1764626529173,NA,male,English,red,win,NA,NA,NA,8751,yellow,disjunctive,NA,1,comprehension-1
+2050,32,NA,,win,NA,NA,NA,Higher degree,861722,1764627390895,1764626529173,NA,male,English,red,win,NA,NA,NA,916,green,disjunctive,NA,2,comprehension-1
+2050,32,NA,,lose,NA,NA,NA,Higher degree,861722,1764627390895,1764626529173,NA,male,English,blue,lose,NA,NA,NA,900,green,disjunctive,NA,3,comprehension-1
+2050,32,NA,,win,NA,NA,NA,Higher degree,861722,1764627390895,1764626529173,NA,male,English,blue,win,NA,NA,NA,1017,yellow,disjunctive,NA,4,comprehension-1
+2050,32,1764626603646,,NA,The red ball,simult,right,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,Both balls were released at the same time,NA,NA,11001,green,disjunctive,1764626610830,1,training-attention
+2050,32,1764626603646,,NA,The red ball,simult,right,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,Both balls were released at the same time,4,4,43850,green,disjunctive,1764626643679,1,training
+2050,32,1764626645595,,NA,The blue ball,short,right,Higher degree,861722,1764627390895,1764626529173,lose,male,English,blue,NA,The blue ball,NA,NA,11067,green,disjunctive,1764626654746,2,training-attention
+2050,32,1764626645595,,NA,The blue ball,short,right,Higher degree,861722,1764627390895,1764626529173,lose,male,English,blue,NA,The blue ball,6,3,16167,green,disjunctive,1764626659846,2,training
+2050,32,1764626662862,,NA,NA,short,right,Higher degree,861722,1764627390895,1764626529173,lose,male,English,blue,NA,NA,4,4,61616,green,disjunctive,1764626723112,1,critical
+2050,32,1764626735187,,NA,NA,simult,none,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,NA,4,4,37000,yellow,disjunctive,1764626760112,2,critical
+2050,32,1764626761245,,NA,The green ball,long,left,Higher degree,861722,1764627390895,1764626529173,lose,male,English,blue,NA,The green ball,NA,NA,15683,green,disjunctive,1764626775795,3,critical-attention
+2050,32,1764626761245,,NA,The green ball,long,left,Higher degree,861722,1764627390895,1764626529173,lose,male,English,blue,NA,The green ball,6,2,21399,green,disjunctive,1764626781511,3,critical
+2050,32,1764626816162,,NA,NA,simult,none,Higher degree,861722,1764627390895,1764626529173,win,male,English,blue,NA,NA,1,7,46418,yellow,disjunctive,1764626827929,4,critical
+2050,32,1764626829579,,NA,NA,short,right,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,NA,6,1,15183,green,disjunctive,1764626843112,5,critical
+2050,32,1764626844578,,NA,Both balls were released at the same time,simult,none,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,Both balls were released at the same time,NA,NA,6783,green,disjunctive,1764626849895,6,critical-attention
+2050,32,1764626844578,,NA,Both balls were released at the same time,simult,none,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,Both balls were released at the same time,7,1,13233,green,disjunctive,1764626856345,6,critical
+2050,32,1764626859462,,NA,NA,short,left,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,NA,4,4,262432,yellow,disjunctive,1764627118777,7,critical
+2050,32,1764627120944,,NA,NA,short,left,Higher degree,861722,1764627390895,1764626529173,win,male,English,blue,NA,NA,1,7,14600,yellow,disjunctive,1764627133377,8,critical
+2050,32,1764627135078,,NA,The yellow ball,long,left,Higher degree,861722,1764627390895,1764626529173,win,male,English,blue,NA,The yellow ball,NA,NA,28334,yellow,disjunctive,1764627161711,9,critical-attention
+2050,32,1764627135078,,NA,The yellow ball,long,left,Higher degree,861722,1764627390895,1764626529173,win,male,English,blue,NA,The yellow ball,1,7,36635,yellow,disjunctive,1764627170012,9,critical
+2050,32,1764627171378,,NA,NA,long,right,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,NA,4,4,177599,yellow,disjunctive,1764627347611,10,critical
+2050,32,1764627359094,,NA,NA,simult,none,Higher degree,861722,1764627390895,1764626529173,lose,male,English,blue,NA,NA,4,4,17834,green,disjunctive,1764627365445,11,critical
+2050,32,1764627367078,,NA,NA,long,right,Higher degree,861722,1764627390895,1764626529173,win,male,English,red,NA,NA,4,1,12966,green,disjunctive,1764627378410,12,critical
+2051,28,NA,This is Karl :),win,NA,NA,NA,Higher degree,358412,1764669585052,1764669226640,NA,male,English,red,win,NA,NA,NA,6617,yellow,conjunctive,NA,1,comprehension-1
+2051,28,NA,This is Karl :),lose,NA,NA,NA,Higher degree,358412,1764669585052,1764669226640,NA,male,English,blue,lose,NA,NA,NA,1633,green,conjunctive,NA,2,comprehension-1
+2051,28,NA,This is Karl :),lose,NA,NA,NA,Higher degree,358412,1764669585052,1764669226640,NA,male,English,red,lose,NA,NA,NA,5283,green,conjunctive,NA,3,comprehension-1
+2051,28,NA,This is Karl :),lose,NA,NA,NA,Higher degree,358412,1764669585052,1764669226640,NA,male,English,blue,lose,NA,NA,NA,683,yellow,conjunctive,NA,4,comprehension-1
+2051,28,1764669292995,This is Karl :),NA,The red ball,simult,right,Higher degree,358412,1764669585052,1764669226640,win,male,English,red,NA,Both balls were released at the same time,NA,NA,10867,yellow,conjunctive,1764669301245,1,training-attention
+2051,28,1764669292995,This is Karl :),NA,The red ball,simult,right,Higher degree,358412,1764669585052,1764669226640,win,male,English,red,NA,Both balls were released at the same time,3,3,28250,yellow,conjunctive,1764669318628,1,training
+2051,28,1764669319810,This is Karl :),NA,The blue ball,short,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,The blue ball,NA,NA,7852,yellow,conjunctive,1764669326480,2,training-attention
+2051,28,1764669319810,This is Karl :),NA,The blue ball,short,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,The blue ball,7,1,14216,yellow,conjunctive,1764669332844,2,training
+2051,28,1764669334611,This is Karl :),NA,NA,short,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,red,NA,NA,6,3,24950,green,conjunctive,1764669358795,1,critical
+2051,28,1764669361310,This is Karl :),NA,NA,simult,none,Higher degree,358412,1764669585052,1764669226640,win,male,English,red,NA,NA,5,5,12882,yellow,conjunctive,1764669371677,2,critical
+2051,28,1764669372894,This is Karl :),NA,The blue ball,long,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,The blue ball,NA,NA,12451,green,conjunctive,1764669384127,3,critical-attention
+2051,28,1764669372894,This is Karl :),NA,The blue ball,long,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,The blue ball,7,5,17516,green,conjunctive,1764669389193,3,critical
+2051,28,1764669390459,This is Karl :),NA,NA,long,left,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,NA,5,2,20185,yellow,conjunctive,1764669409378,4,critical
+2051,28,1764669410360,This is Karl :),NA,NA,simult,none,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,NA,6,1,40998,yellow,conjunctive,1764669450376,5,critical
+2051,28,1764669451410,This is Karl :),NA,The red ball,long,right,Higher degree,358412,1764669585052,1764669226640,win,male,English,red,NA,The red ball,NA,NA,12666,yellow,conjunctive,1764669463042,6,critical-attention
+2051,28,1764669451410,This is Karl :),NA,The red ball,long,right,Higher degree,358412,1764669585052,1764669226640,win,male,English,red,NA,The red ball,7,7,21233,yellow,conjunctive,1764669471609,6,critical
+2051,28,1764669472826,This is Karl :),NA,NA,simult,none,Higher degree,358412,1764669585052,1764669226640,lose,male,English,red,NA,NA,2,6,10751,green,conjunctive,1764669482360,7,critical
+2051,28,1764669483392,This is Karl :),NA,NA,short,left,Higher degree,358412,1764669585052,1764669226640,win,male,English,red,NA,NA,2,7,20566,yellow,conjunctive,1764669502926,8,critical
+2051,28,1764669504292,This is Karl :),NA,The red ball,long,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,red,NA,The red ball,NA,NA,13034,green,conjunctive,1764669515960,9,critical-attention
+2051,28,1764669504292,This is Karl :),NA,The red ball,long,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,red,NA,The red ball,2,6,17766,green,conjunctive,1764669520692,9,critical
+2051,28,1764669522175,This is Karl :),NA,NA,short,left,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,NA,7,1,16150,yellow,conjunctive,1764669536842,10,critical
+2051,28,1764669537825,This is Karl :),NA,NA,simult,none,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,NA,7,3,11749,green,conjunctive,1764669548592,11,critical
+2051,28,1764669550125,This is Karl :),NA,NA,short,right,Higher degree,358412,1764669585052,1764669226640,lose,male,English,blue,NA,NA,6,1,16317,green,conjunctive,1764669564908,12,critical
+2052,,NA,,win,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,red,lose,NA,NA,NA,6797,green,disjunctive,NA,1,comprehension-1
+2052,,NA,,lose,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,blue,lose,NA,NA,NA,356,green,disjunctive,NA,2,comprehension-1
+2052,,NA,,win,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,blue,lose,NA,NA,NA,330,yellow,disjunctive,NA,3,comprehension-1
+2052,,NA,,win,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,red,lose,NA,NA,NA,374,yellow,disjunctive,NA,4,comprehension-1
+2052,,NA,,win,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,red,win,NA,NA,NA,1829,green,disjunctive,NA,1,comprehension-2
+2052,,NA,,lose,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,blue,lose,NA,NA,NA,1232,green,disjunctive,NA,2,comprehension-2
+2052,,NA,,win,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,blue,win,NA,NA,NA,2066,yellow,disjunctive,NA,3,comprehension-2
+2052,,NA,,win,NA,NA,NA,,265637,1764671121221,1764670855584,NA,other,,red,win,NA,NA,NA,708,yellow,disjunctive,NA,4,comprehension-2
+2052,,1764670883854,,NA,The red ball,simult,right,,265637,1764671121221,1764670855584,win,other,,red,NA,Both balls were released at the same time,NA,NA,5924,green,disjunctive,1764670888744,1,training-attention
+2052,,1764670883854,,NA,The red ball,simult,right,,265637,1764671121221,1764670855584,win,other,,red,NA,Both balls were released at the same time,4,5,8959,green,disjunctive,1764670891779,1,training
+2052,,1764670892709,,NA,The green ball,short,left,,265637,1764671121221,1764670855584,lose,other,,blue,NA,The green ball,NA,NA,7510,green,disjunctive,1764670899289,2,training-attention
+2052,,1764670892709,,NA,The green ball,short,left,,265637,1764671121221,1764670855584,lose,other,,blue,NA,The green ball,2,5,10468,green,disjunctive,1764670902247,2,training
+2052,,1764670904089,,NA,NA,long,left,,265637,1764671121221,1764670855584,win,other,,red,NA,NA,4,4,12779,green,disjunctive,1764670916149,1,critical
+2052,,1764670936893,,NA,NA,simult,none,,265637,1764671121221,1764670855584,lose,other,,blue,NA,NA,4,4,25921,green,disjunctive,1764670942070,2,critical
+2052,,1764670943106,,NA,Both balls were released at the same time,simult,none,,265637,1764671121221,1764670855584,win,other,,red,NA,Both balls were released at the same time,NA,NA,8145,green,disjunctive,1764670950215,3,critical-attention
+2052,,1764670943106,,NA,Both balls were released at the same time,simult,none,,265637,1764671121221,1764670855584,win,other,,red,NA,Both balls were released at the same time,3,6,11806,green,disjunctive,1764670953876,3,critical
+2052,,1764670954826,,NA,NA,short,right,,265637,1764671121221,1764670855584,win,other,,red,NA,NA,4,4,7368,green,disjunctive,1764670961244,4,critical
+2052,,1764670962161,,NA,NA,short,right,,265637,1764671121221,1764670855584,lose,other,,blue,NA,NA,5,4,11401,green,disjunctive,1764670972645,5,critical
+2052,,1764670973725,,NA,The green ball,long,left,,265637,1764671121221,1764670855584,lose,other,,blue,NA,The green ball,NA,NA,11537,green,disjunctive,1764670984182,6,critical-attention
+2052,,1764670973725,,NA,The green ball,long,left,,265637,1764671121221,1764670855584,lose,other,,blue,NA,The green ball,5,3,22725,green,disjunctive,1764670995370,6,critical
+2052,,1764670996229,,NA,NA,long,right,,265637,1764671121221,1764670855584,win,other,,red,NA,NA,4,4,51019,yellow,disjunctive,1764671046389,7,critical
+2052,,1764671050079,,NA,NA,simult,none,,265637,1764671121221,1764670855584,win,other,,red,NA,NA,6,2,24902,yellow,disjunctive,1764671071291,8,critical
+2052,,1764671072101,,NA,The yellow ball,long,left,,265637,1764671121221,1764670855584,win,other,,blue,NA,The yellow ball,NA,NA,12988,yellow,disjunctive,1764671084279,9,critical-attention
+2052,,1764671072101,,NA,The yellow ball,long,left,,265637,1764671121221,1764670855584,win,other,,blue,NA,The yellow ball,4,4,15340,yellow,disjunctive,1764671086631,9,critical
+2052,,1764671087717,,NA,NA,short,right,,265637,1764671121221,1764670855584,win,other,,blue,NA,NA,5,3,7865,yellow,disjunctive,1764671094497,10,critical
+2052,,1764671095427,,NA,NA,simult,none,,265637,1764671121221,1764670855584,win,other,,blue,NA,NA,5,3,5569,yellow,disjunctive,1764671100066,11,critical
+2052,,1764671100977,,NA,NA,short,left,,265637,1764671121221,1764670855584,win,other,,red,NA,NA,3,6,8426,yellow,disjunctive,1764671108492,12,critical

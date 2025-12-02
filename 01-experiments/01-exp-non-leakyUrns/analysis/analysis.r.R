@@ -36,7 +36,43 @@ scale_fill_discrete <- function(...) {
 ##################################################
 
 
-setwd('01-experiments/01-exp-non-leakyUrns')
-getwd()
 # import data
-df <- read.csv('/data/results_36_CC-ChronoCause-exp-01-beta_EZ-4.csv')
+df <- read.csv('01-experiments/01-exp-non-leakyUrns/data/results_01-exp-non-leakyUrns-pilot1.csv')
+
+# sanity check - number of participants
+df %>% distinct(prolific_pid) %>% count()
+
+# sanity check for trial types
+df_comprehension <- df %>% filter(grepl('comprehension',trialType))
+df_trials <- df %>% filter(trialType=='critical' | trialType =='training')
+df_attention <- df %>% filter(trialType=='critical-attention' | trialType =='training-attention')
+
+
+# identify if response to comprehension and attention questions is correct
+df <- df %>%
+  mutate(correctComprehension =
+                  ifelse(is.na(correctResponse), 1,
+                         correctResponse==response)) %>%
+    mutate(correctAttention =
+                  ifelse(is.na(correctResponseAttention), 1,
+                         correctResponseAttention==responseAttention))
+
+# identify participants failing comprehension questions
+# 0 - passed comprehension questions
+# 1 - failed first round
+# 2 failed both rounds
+
+# TODO
+
+# getCorrectness <- function(id){
+#   g <- d %>% filter(prolific_pid==id)
+#   if(sum(g$correct)==nrow(g)){return(1)}
+#   else{return(0)}
+#
+# }
+# d <- d %>% mutate(participantCorrect = unlist(
+#   pmap(
+#     list(prolific_pid),
+#     getCorrectness
+#   )
+# ))
