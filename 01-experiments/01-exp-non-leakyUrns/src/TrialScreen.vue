@@ -8,6 +8,7 @@ Parameters:
   'length' - number of either main or training trials
   'getType' - used to pass the getType function defined in App.vue
   'getDelay' - used to pass the getDelay function defined in App.vue
+  'which_urn_prompted_first' - used to pass the which_urn_prompted_first value
 
 Example usage:
   <template v-for="(trial, i) of training_trials">
@@ -25,7 +26,8 @@ defineProps({
   index: Number,
   length: Number,
   getType: Function,
-  getDelay: Function
+  getDelay: Function,
+  which_urn_prompted_first: String
 });
 
 function saveAndNextScreenTimeLog() {
@@ -141,7 +143,7 @@ function saveAndNextSlideTimeLog() {
       </p>
 
       <p>
-        <b>Getting a {{ trial.leftColor }} ball caused Alice to {{
+        <b>Getting a {{which_urn_prompted_first === "left" ?  trial.leftColor : trial.rightColor }} ball caused Alice to {{
             trial.gameOutcome
           }}.</b>
       </p>
@@ -152,7 +154,7 @@ function saveAndNextSlideTimeLog() {
       />
 
       <p>
-        <b>Getting a {{ trial.rightColor }} ball caused Alice to
+        <b>Getting a {{which_urn_prompted_first === "left" ?  trial.rightColor : trial.leftColor }} ball caused Alice to
           {{ trial.gameOutcome }}.</b>
       </p>
       <RatingInput

@@ -135,9 +135,9 @@
     </template>
 
     <InstructionScreen>
-      <p v-if="comprehensionPassed">Great, you understood the task! Let’s begin.</p>
+      <p v-if="!comprehensionFailed">Great, you understood the task! Let’s begin.</p>
 
-      <p v-if="!comprehensionPassed"> Oops! You made a mistake.<br/>
+      <p v-if="comprehensionFailed"> Oops! You made a mistake.<br/>
         Remember, the player wins just in case
         <b>{{
             structure == "conjunctive" ? "both" : "at least one"
@@ -148,7 +148,7 @@
         <br/>
         Here are the possible outcomes:
       </p>
-      <div v-if="!comprehensionPassed" class="outcomes">
+      <div v-if="comprehensionFailed" class="outcomes">
         <div class="col">
           <Ball color="red" :type='getType("red")'/>
           <Ball color="blue" :type='getType("blue")'/>
@@ -168,11 +168,11 @@
           <p>LOSE</p>
         </div>
       </div>
-      <p v-if="!comprehensionPassed">Let’s try again!
+      <p v-if="comprehensionFailed">Let’s try again!
       </p>
     </InstructionScreen>
 
-    <template v-if="!comprehensionPassed" v-for="(trial, i) in comprehension">
+    <template v-if="comprehensionFailed" v-for="(trial, i) in comprehension">
       <Screen>
         <Slide>
           <p>
@@ -224,7 +224,7 @@
 
     <template v-for="(trial, i) of training_trials">
       <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType"
-                   :getDelay="getDelay"/>
+                   :getDelay="getDelay" :which_urn_prompted_first="which_urn_prompted_first"/>
     </template>
 
     <InstructionScreen :title="'Instructions'">
@@ -233,7 +233,7 @@
 
     <template v-for="(trial, i) of main_trials">
       <TrialScreen trialType="critical" :trial="trial" :index="i" :length="main_trials.length" :getType="getType"
-                   :getDelay="getDelay"/>
+                   :getDelay="getDelay" :which_urn_prompted_first="which_urn_prompted_first"/>
     </template>
 
     <PostTestScreen/>
@@ -256,10 +256,13 @@ import comprehension_all from "../trials/comprehension.csv";
 
 
 const structure = _.sample(["conjunctive", "disjunctive"]);
-
+console.log('structure ', structure)
+const which_urn_prompted_first = _.sample(["left", "right"]);
+console.log('which_urn_prompted_first', which_urn_prompted_first);
 let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
   return i.structure == structure;
 }));
+
 main_trials.forEach(trial => {
   if (trial['delay'] == 'simult') {
     trial['delayedUrn'] = 'none';
@@ -295,10 +298,11 @@ export default {
   data() {
     return {
       structure: structure,
+      which_urn_prompted_first: which_urn_prompted_first,
       main_trials: main_trials,
       training_trials: training_trials,
       comprehension: comprehension,
-      comprehensionPassed: true
+      comprehensionFailed: false
     };
   },
   methods: {
@@ -336,7 +340,7 @@ export default {
       return delay;
     },
     saveComprehensionResponse: function (response, correctResponse) {
-      this.comprehensionPassed = this.comprehensionPassed && (response == correctResponse);
+      this.comprehensionFailed = (this.comprehensionFailed || !(response == correctResponse));
       $magpie.saveAndNextScreen();
     }
   },
