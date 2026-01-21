@@ -13,7 +13,8 @@ jobs:
       max-parallel: 1
       matrix:
         folder:
-          - ./01-experiments/01-exp-non-leakyUrns
+          - ./01-experiments/01-exp-non-leakyUrns/pilot1
+          - ./01-experiments/01-exp-non-leakyUrns/pilot2
 
     runs-on: ubuntu-latest
     steps:

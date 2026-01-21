@@ -18,7 +18,7 @@ Example usage:
 
 <script setup>
 
-import NonLeakyUrns from "../../00-customComponents/NonLeakyUrns.vue";
+import NonLeakyUrns from "../../../00-customComponents/NonLeakyUrns.vue";
 
 defineProps({
   trialType: String,

@@ -2,7 +2,6 @@
   <Experiment title="ChronoCause">
 
     <InstructionScreen :title="'Welcome'">
-
       Hi, thanks for taking part!
       In this experiment, you will be introduced to a simple game.
       Then, you will see a few rounds of the game being played and you will be asked to make some judgements.
@@ -244,9 +243,9 @@
 <script>
 import _ from "lodash";
 
-import NonLeakyUrns from "../../00-customComponents/NonLeakyUrns.vue";
-import Urn from "../../00-customComponents/Urn.vue";
-import Ball from "../../00-customComponents/Ball.vue";
+import NonLeakyUrns from "../../../00-customComponents/NonLeakyUrns.vue";
+import Urn from "../../../00-customComponents/Urn.vue";
+import Ball from "../../../00-customComponents/Ball.vue";
 
 import TrialScreen from "./TrialScreen.vue";
 
@@ -256,7 +255,7 @@ import comprehension_all from "../trials/comprehension.csv";
 
 
 const structure = _.sample(["conjunctive", "disjunctive"]);
-console.log('structure ', structure)
+console.log('structure ', structure);
 const which_urn_prompted_first = _.sample(["left", "right"]);
 console.log('which_urn_prompted_first', which_urn_prompted_first);
 let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
@@ -292,6 +291,9 @@ const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
   return i.structure == structure;
 }));
 
+console.log('training trials', JSON.parse(JSON.stringify(training_trials)));
+console.log('main trials', JSON.parse(JSON.stringify(main_trials)));
+
 export default {
   name: "App",
   components: {TrialScreen, Urn, NonLeakyUrns, Ball},
@@ -325,17 +327,23 @@ export default {
       return type;
     },
     getDelay(name) {
-      let delay = 1000;
+      const base_delay = 1000;
+      let delay;
       switch (name) {
         case 'base':
-          delay = 1000;
+          delay = base_delay;
           break;
         case 'short':
-          delay = 3000;
+          delay = base_delay + 2000;
+          break;
+        case 'medium':
+          delay = base_delay + 5000;
           break;
         case 'long':
-          delay = 7000;
+          delay = base_delay + 8000;
           break;
+          default:
+            delay = base_delay;
       }
       return delay;
     },
