@@ -56,7 +56,7 @@ function saveAndNextSlideTimeLog() {
           :firstTypeRight='getType("yellow")'
           secondColorRight='green'
           :secondTypeRight='getType("green")'
-        :timingLeft="trial.delayedUrn != 'left'? getDelay('base') : getDelay(trial.delay)"
+          :timingLeft="trial.delayedUrn != 'left'? getDelay('base') : getDelay(trial.delay)"
           :outputColorLeft=trial.leftColor
           :outputTypeLeft='getType(trial.leftColor)'
           :timingRight="trial.delayedUrn != 'left'? getDelay(trial.delay) : getDelay('base')"
@@ -95,7 +95,7 @@ function saveAndNextSlideTimeLog() {
                 'The ' + trial.rightColor + ' ball',
                 'Both balls were released at the same time']"/>
 
-        <button v-if="$magpie.measurements.responseAttention"  @click="saveAndNextSlideTimeLog">Submit</button>
+        <button v-if="$magpie.measurements.responseAttention" @click="saveAndNextSlideTimeLog">Submit</button>
       </p>
 
       <Record
@@ -105,6 +105,7 @@ function saveAndNextSlideTimeLog() {
               structure:trial.structure,
               leftColor: trial.leftColor,
               rightColor: trial.rightColor,
+              combo: trial.combo,
               gameOutcome: trial.gameOutcome,
               delay: trial.delay,
               delayedUrn: trial.delayedUrn,
@@ -143,7 +144,8 @@ function saveAndNextSlideTimeLog() {
       </p>
 
       <p>
-        <b>Getting a {{which_urn_prompted_first === "left" ?  trial.leftColor : trial.rightColor }} ball caused Alice to {{
+        <b>Getting a {{ which_urn_prompted_first === "left" ? trial.leftColor : trial.rightColor }} ball caused Alice to
+          {{
             trial.gameOutcome
           }}.</b>
       </p>
@@ -154,7 +156,7 @@ function saveAndNextSlideTimeLog() {
       />
 
       <p>
-        <b>Getting a {{which_urn_prompted_first === "left" ?  trial.rightColor : trial.leftColor }} ball caused Alice to
+        <b>Getting a {{ which_urn_prompted_first === "left" ? trial.rightColor : trial.leftColor }} ball caused Alice to
           {{ trial.gameOutcome }}.</b>
       </p>
       <RatingInput
@@ -174,6 +176,7 @@ function saveAndNextSlideTimeLog() {
               structure:trial.structure,
               leftColor: trial.leftColor,
               rightColor: trial.rightColor,
+              combo: trial.combo,
               gameOutcome: trial.gameOutcome,
               delay: trial.delay,
               delayedUrn: trial.delayedUrn,
