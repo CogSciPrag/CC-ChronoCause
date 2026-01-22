@@ -1,0 +1,257 @@
+---
+title: "ChronoCause Pilot"
+author: "Karl Mulligan, Erik Zeiner"
+date: "2025-12-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+# CSP preamble
+
+# load packages
+library(tidyverse)
+library(ggbeeswarm)
+library(brms)
+library(tidyboot)
+library(tidyjson)
+library(tidybayes)
+library(patchwork)
+library(GGally)
+library(cowplot)
+library(BayesFactor)
+library(aida)   # custom helpers: https://github.com/michael-franke/aida-package
+library(faintr) # custom helpers: https://michael-franke.github.io/faintr/index.html
+library(cspplot)
+library(knitr)
+library(ggplot2)
+library(ggstance)
+
+##################################################
+
+# these options help Stan run faster
+options(mc.cores = parallel::detectCores(),
+        brms.backend = "cmdstanr")
+
+# use the CSP-theme for plotting
+theme_set(theme_csp())
+
+# global color scheme from CSP
+project_colors = cspplot::list_colors() |> pull(hex)
+
+# setting theme colors globally
+scale_colour_discrete <- function(...) {
+  scale_colour_manual(..., values = project_colors)
+}
+
+scale_fill_discrete <- function(...) {
+  scale_fill_manual(..., values = project_colors)
+}
+
+##################################################
+```
+
+# ChronoCause Pilot
+
+This is an analysis pipeline for v.1 ChronoCause, using pilot data collected from Prolific on ($N = 15$).
+
+```{r import, include=FALSE}
+
+# set working directory if needed
+# setwd("ADD_YOUR_PATH/CC-ChronoCause")
+raw <- read.csv("01-experiments/01-exp-non-leakyUrns/pilot1/data/results_01-exp-non-leakyUrns_pilot1.csv")
+glimpse(raw)
+```
+
+### Preprocessing
+
+To address our main research questions, we need to recode the data in a few ways:
+
+- In items with a delay, we need to code which ratings came from the earlier ball (`responseEarly`), and which came from the later ball (`responseLate`).
+- We need general labels for specific code outcomes, like *solid-solid* (`combo`)
+- We need long-form pivoted DataFrames in order to group by early/late (`full_long`) or left/right (`full_long_LR`).
+
+
+```{r}
+full <- raw
+
+# define order for plotting purposes
+full$delay <- factor(full$delay, levels = c("simult", "short", "long"))
+
+# code early and late
+full <- full %>% mutate(responseEarly = ifelse(delayedUrn == "none", NA, ifelse(delayedUrn == "left", responseRight, responseLeft)))
+full <- full %>% mutate(responseLate = ifelse(delayedUrn == "none", NA, ifelse(delayedUrn == "left", responseLeft, responseRight)))
+
+# code combination types
+full <- full %>% mutate(combo = ifelse((leftColor == "red") & (rightColor == "yellow"), "solid-solid", ifelse((leftColor == "blue") & (rightColor == "green"), "striped-striped", ifelse((leftColor == "blue") & (rightColor == "yellow"), "striped-solid", ifelse((leftColor == "red") & (rightColor == "green"), "solid-striped", NA)))))
+
+# long-form dataframe for analyses grouping by early/late 
+full_long <- pivot_longer(full, cols = c("responseEarly", "responseLate"), names_to = "which_ball_EL", values_to = "causal_val")
+# long-form dataframe for analyses grouping by left/right
+full_long_LR <- pivot_longer(full, cols = c("responseLeft", "responseRight"), names_to = "which_ball_LR", values_to = "causal_val")
+
+# conjunctive/disjunctive-only versions 
+conj <- full_long %>% filter(structure == "conjunctive")
+disj <- full_long %>% filter(structure == "disjunctive")
+conj_LR <- full_long_LR %>% filter(trialType == "critical" & structure == "conjunctive")
+disj_LR <- full_long_LR %>% filter(trialType == "critical" & structure == "disjunctive")
+
+```
+
+## Main research question: does time (delay in events) affect how people attribute causality?
+
+For each item, there is one of two outcomes: **win** or **lose**.
+
+We solicit two ratings on a 7-point likert scale, from 1 (strongly disagree) to 7 (strongly agree):
+
+- "Getting a {red/yellow/green/blue} ball caused Alice to {win/lose}."
+- "Getting a {red/yellow/green/blue} ball caused Alice to {win/lose}."
+
+We are interested in whether there is a difference in causal attribution between the earlier and the later events: the delta between these two ratings. We define $\Delta$: 'causal rating of the late-occurring event' -- 'causal rating of the earlier-occuring event'.
+
+TODO: right now, the charts below are looking at averages across participants; this is wrong! We should be calculating deltas *per item*: make a new column for this.
+
+### Conjunction hypotheses
+
+**Comparison of mean responses across all participants**
+```{r}
+conj %>%
+  filter(trialType == "critical") %>%
+  ggplot(aes(x = which_ball_EL, y = causal_val, color = delay)) +
+  stat_summary(fun = 'mean', position = position_dodge()) +
+  stat_summary(fun = 'mean', geom = 'line', aes(group = delay), position = position_dodge()) +
+  stat_summary(fun.data = 'mean_se', position = position_dodge()) +
+  geom_jitter(aes(), position = position_jitterdodge(jitter.width = 0.05,
+                                                     jitter.height = .2,
+                                                     dodge.width = 0.8),
+              color = 'black', alpha = .2) +
+  facet_wrap(~combo) +
+  scale_color_manual(values = c(project_colors[1], project_colors[4]), name = 'delay length') +
+  labs(title = "Conjunctive")
+```
+
+**Per-participant view**
+```{r}
+
+conj %>%
+  filter(trialType == "critical") %>%
+  filter(delay != "simult") %>%
+  mutate(delay = factor(delay, levels = c("short", "long"))) %>%
+  ggplot(aes(x = which_ball_EL, y = causal_val, color = delay, group = delay)) +
+  geom_point(size = 3, position = position_dodgev(height = 0.2)) +
+  geom_line(size = 1, position = position_dodgev(height = 0.2)) +
+  scale_y_continuous(breaks = 1:7) +
+  facet_grid(combo ~ as.integer(factor(prolific_pid))) +
+  scale_color_manual(values = c(project_colors[1], project_colors[4]), name = 'delay length') +
+  labs(title = "Conjunctive")
+```
+
+#### Lazy power-analysis
+```{r}
+conj_duplicated <- conj %>%
+  slice(rep(1:n(), each = 20))
+
+conj_duplicated %>%
+  filter(trialType == "critical") %>%
+  ggplot(aes(x = which_ball_EL, y = causal_val, fill = delay)) +
+  stat_summary(fun = mean, geom = "bar", width = 0.20, position = position_dodge(width = 0.25)) +
+  stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.12, linewidth = 0.6, colour = project_colors[2], position = position_dodge(width = 0.25)) +
+  facet_wrap(~combo) +
+  scale_fill_manual(values = c(project_colors[1], project_colors[4]),
+                    name = 'delay length') +
+  labs(y = "Mean causal value ± SE", title = "Conjunctive")
+```
+
+#### Hypothesis 1: Categorical effect of time for conjunctive events
+For conjunctive events, we expect there to be a preference for attributing causality to the *later* event in conditions with a (short or long) delay: i.e., a positive $\Delta$.
+
+- 0 < $\Delta$(conjunctive, short) & 0 < $\Delta$(conjunctive, long)
+
+The consequential conditions here are `solid-solid` (win) and `striped-striped` (lose).
+
+SUPPORTED (valence effect for `striped-striped`?)
+
+#### Hypothesis 2: Gradient effect of time for conjunctive events
+For conjunctive events, we expect long delays to have a *greater* preference in causal attribution than short delays:
+
+- 0 < $\Delta$(conjunctive, short) < $\Delta$(conjunctive, long)
+
+The consequential conditions here are `solid-solid` (win) and `striped-striped` (lose).
+
+UNSUPPORTED(?)
+
+### Disjunction hypotheses
+
+```{r}
+disj %>%
+  filter(trialType == "critical") %>%
+  ggplot(aes(x = which_ball_EL, y = causal_val, color = delay)) +
+  stat_summary(fun = 'mean', position = position_dodge()) +
+  stat_summary(fun = 'mean', geom = 'line', aes(group = delay), position = position_dodge()) +
+  stat_summary(fun.data = 'mean_se', position = position_dodge()) +
+  geom_jitter(aes(), position = position_jitterdodge(jitter.width = 0.05,
+                                                     jitter.height = .2,
+                                                     dodge.width = 0.8),
+              color = 'black', alpha = .2) +
+  facet_wrap(~combo) +
+  scale_color_manual(values = c(project_colors[1], project_colors[4]), name = 'delay length') +
+  labs(title = "Disjunctive")
+```
+
+**Per-participant view**
+```{r}
+disj %>%
+  filter(trialType == "critical") %>%
+  filter(delay != "simult") %>%
+  mutate(delay = factor(delay, levels = c("short", "long"))) %>%
+  ggplot(aes(x = which_ball_EL, y = causal_val, color = delay, shape = delay, group = delay)) +
+  geom_point(size = 3, position = position_dodgev(height = 0.2)) +
+  geom_line(size = 1, position = position_dodgev(height = 0.2)) +
+  scale_y_continuous(breaks = 1:7) +
+  facet_grid(combo ~ as.integer(factor(prolific_pid))) +
+  scale_color_manual(values = c(project_colors[1], project_colors[4]),
+                     name = 'delay length') +
+  labs(title = "Disjunctive")
+```
+
+#### Lazy power-analysis
+```{r}
+disj_duplicated <- disj %>%
+  slice(rep(1:n(), each = 20))
+
+disj_duplicated %>%
+  filter(trialType == "critical") %>%
+  ggplot(aes(x = which_ball_EL, y = causal_val, fill = delay)) +
+  stat_summary(fun = mean, geom = "bar", width = 0.20, position = position_dodge(width = 0.25)) +
+  stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.12, linewidth = 0.6, colour = project_colors[2], position = position_dodge(width = 0.25)) +
+  facet_wrap(~combo) +
+  scale_fill_manual(values = c(project_colors[1], project_colors[4]), name = 'delay length') +
+  labs(y = "Mean causal value ± SE", title = "Disjunctive")
+```
+
+#### Hypothesis 3: Categorical effect of time for disjunctive events
+For conjunctive events, we expect there to be a preference for attributing causality to the *earlier* event in conditions with a (short or long) delay: i.e., a negative $\Delta$.
+
+- 0 > $\Delta$(disjunctive, short) & 0 > $\Delta$(disjunctive, long)
+
+The consequential conditions here are also `solid-solid` (win) and `striped-striped` (lose).
+
+SUPPORTED
+
+#### Hypothesis 4: Gradient effect of time for disjunctive events
+For disjunctive events, we expect long delays to have a *greater* difference in causal attribution than short delays:
+
+- 0 > $\Delta$(disjunctive, short) > $\Delta$(disjunctive, long)
+
+The consequential conditions here are also `solid-solid` (win) and `striped-striped` (lose).
+
+UNSUPPORTED
+
+## Suggestions for next version
+
+- Increase duration of `long` condition to potentially see a gradient effect
+- Randomize order of rating prompts
+
+
