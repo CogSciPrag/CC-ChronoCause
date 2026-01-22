@@ -255,9 +255,9 @@ import comprehension_all from "../trials/comprehension.csv";
 
 
 const structure = _.sample(["conjunctive", "disjunctive"]);
-console.log('structure ', structure);
+// console.log('structure ', structure);
 const which_urn_prompted_first = _.sample(["left", "right"]);
-console.log('which_urn_prompted_first', which_urn_prompted_first);
+// console.log('which_urn_prompted_first', which_urn_prompted_first);
 let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
   return i.structure == structure;
 }));
@@ -274,6 +274,7 @@ main_trials.forEach(trial => {
 main_trials[2]['attentionCheck'] = true
 main_trials[5]['attentionCheck'] = true
 main_trials[8]['attentionCheck'] = true
+main_trials[11]['attentionCheck'] = true
 
 const training_trials = _.filter(training_trials_all, function (i) {
   return i.structure == structure;
@@ -291,8 +292,8 @@ const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
   return i.structure == structure;
 }));
 
-console.log('training trials', JSON.parse(JSON.stringify(training_trials)));
-console.log('main trials', JSON.parse(JSON.stringify(main_trials)));
+// console.log('training trials', JSON.parse(JSON.stringify(training_trials)));
+// console.log('main trials', JSON.parse(JSON.stringify(main_trials)));
 
 export default {
   name: "App",
