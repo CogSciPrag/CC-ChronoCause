@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "lint:style": "vue-cli-service lint:style"
+    "serve": "../node_modules/.bin/vue-cli-service serve",
+    "build": "../node_modules/.bin/vue-cli-service build",
+    "lint": "../node_modules/.bin/vue-cli-service lint",
+    "lint:style": "../node_modules/.bin/vue-cli-service lint:style"
   },
   "dependencies": {
     "magpie-base": "^3.6.8",
