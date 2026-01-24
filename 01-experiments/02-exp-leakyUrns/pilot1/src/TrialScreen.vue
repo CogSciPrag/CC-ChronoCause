@@ -67,8 +67,8 @@ function saveAndNextSlideTimeLog() {
         <MultipleChoiceInput
             :response.sync="$magpie.measurements.responseAttention"
             :options="[
-                'The ' + trial.early === 'solid' ? 'black' : 'purple' + ' ball',
-                'The ' + trial.outputLabelEarly==='A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green')  + ' ball',
+                'The ' + (trial.early === 'solid' ? 'black' : 'purple') + ' ball',
+                'The ' + (trial.outputLabelEarly==='A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green'))  + ' ball',
                 'Both balls were released at the same time']"/>
 
         <button v-if="$magpie.measurements.responseAttention" @click="saveAndNextSlideTimeLog">Submit</button>
@@ -118,31 +118,30 @@ function saveAndNextSlideTimeLog() {
         Do you agree with the following statements?
       </p>
 
-<!--      <p>-->
-<!--        <b>Getting a {{ which_urn_prompted_first === "left" ? trial.leftColor : trial.rightColor }} ball caused Alice to-->
-<!--          {{-->
-<!--            trial.gameOutcome-->
-<!--          }}.</b>-->
-<!--      </p>-->
-<!--      <RatingInput-->
-<!--          left="strongly disagree"-->
-<!--          right="strongly agree"-->
-<!--          :response.sync="$magpie.measurements.responseLeft"-->
-<!--      />-->
+      <p>
+        <b>Getting a {{ which_urn_prompted_first === "early" ? (trial.early === 'solid' ? 'black' : 'purple') :(trial.outputLabelEarly==='A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green')) }} ball caused Alice to
+          {{
+            trial.gameOutcome
+          }}.</b>
+      </p>
+      <RatingInput
+          left="strongly disagree"
+          right="strongly agree"
+          :response.sync="$magpie.measurements.responseA"
+      />
 
-<!--      <p>-->
-<!--        <b>Getting a {{ which_urn_prompted_first === "left" ? trial.rightColor : trial.leftColor }} ball caused Alice to-->
-<!--          {{ trial.gameOutcome }}.</b>-->
-<!--      </p>-->
-<!--      <RatingInput-->
-<!--          left="strongly disagree"-->
-<!--          right="strongly agree"-->
-<!--          :response.sync="$magpie.measurements.responseRight"-->
-
-<!--      />-->
-<!--      <p v-if="$magpie.measurements.responseLeft > 0 && $magpie.measurements.responseRight > 0">-->
+      <p>
+        <b>Getting a {{ which_urn_prompted_first === "early" ? (trial.outputLabelEarly === 'A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green')) : (trial.early === 'solid' ? 'black' : 'purple')}} ball caused Alice to
+          {{ trial.gameOutcome }}.</b>
+      </p>
+      <RatingInput
+          left="strongly disagree"
+          right="strongly agree"
+          :response.sync="$magpie.measurements.responseB"
+      />
+      <p v-if="$magpie.measurements.responseA > 0 && $magpie.measurements.responseB > 0">
         <button @click="saveAndNextScreenTimeLog">Submit</button>
-<!--      </p>-->
+      </p>
 
 <!--      <Record-->
 <!--          :data="{-->

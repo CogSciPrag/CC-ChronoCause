@@ -1,5 +1,9 @@
 <template>
   <Experiment title="magpie demo">
+    <InstructionScreen :title="'Welcome'">
+      Instruction screens and comprehension checks will be added.
+      See trials on following screens.
+    </InstructionScreen>
     <template v-for="(trial, i) of training_trials">
 
       <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length"
@@ -37,7 +41,7 @@ import comprehension_all from "../trials/comprehension.csv";
 
 const structure = _.sample(["conjunctive", "disjunctive"]);
 console.log('structure ', structure);
-const which_urn_prompted_first = _.sample(["A", "B"]);
+const which_urn_prompted_first = _.sample(["early", "late"]);
 console.log('which_urn_prompted_first', which_urn_prompted_first);
 
 let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {

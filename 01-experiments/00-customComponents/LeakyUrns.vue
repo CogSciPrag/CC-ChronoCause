@@ -55,11 +55,11 @@ const props = defineProps({
   },
 });
 
-const AArrowVisible = ref(false);
-const BArrowVisible = ref(false);
 const earlyBallVisible = props.enabled ? ref(false) : ref(true);
-const ABallVisible = props.enabled ? ref(false) : ref(true);
-const BBallVisible = props.enabled ? ref(false) : ref(true);
+const ABallVisible = props.enabled | !props.earlyOutputA ? ref(false) : ref(true);
+const BBallVisible = props.enabled | props.earlyOutputA ? ref(false) : ref(true);
+const AArrowVisible = props.enabled | !props.earlyOutputA ? ref(false) : ref(true);
+const BArrowVisible = props.enabled | props.earlyOutputA ? ref(false) : ref(true);
 const beginBtnVisible = props.enabled ? ref(true) : ref(false);
 const fixationVisible = ref(false);
 
@@ -128,10 +128,10 @@ function runGame() {
         <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
         <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
+      <LabeledBall v-if="earlyBallVisible" :color="outputColorEarly" :type="outputTypeEarly" class="earlyBall"
+                   :label="outputLabelEarly" id="earlyBall"/>
 
-      <LabeledBall v-if="earlyBallVisible" :color="outputColorEarly" :type="outputTypeEarly" class="earlyBall" :label="outputLabelEarly"/>
-
-      <div class="ALabel">
+      <div class="ALabel" id="ALabel">
         A
       </div>
 
@@ -162,24 +162,25 @@ function runGame() {
           class="BUrn"
       />
 
-      <div class="diagonalArrows">
-        <svg v-if='AArrowVisible' class="arrow ADiagonalArrow" width="60" height="60">
-          <line x1="55" y1="5" x2="10" y2="50" stroke="black" stroke-width="2"/>
-          <polygon points="10,50 18,48 12,42" fill="black"/>
-        </svg>
+      <svg v-if='AArrowVisible' class="arrow ADiagonalArrow" width="200" height="60">
+        <line x1="25" y1="15" x2="190" y2="15" stroke="black" stroke-width="2"/>
+        <line x1="25" y1="15" x2="25" y2="50" stroke="black" stroke-width="2"/>
+        <polygon points="20,40 30,40 25,50" fill="black"/>
+      </svg>
 
-        <svg v-if='BArrowVisible' class="arrow BDiagonalArrow" width="60" height="60">
-          <line x1="5" y1="5" x2="50" y2="50" stroke="black" stroke-width="2"/>
-          <polygon points="50,50 42,48 48,42" fill="black"/>
-        </svg>
-      </div>
+      <svg v-if='BArrowVisible' class="arrow BDiagonalArrow" width="200" height="60">
+        <line x1="10" y1="15" x2="175" y2="15" stroke="black" stroke-width="2"/>
+        <line x1="175" y1="15" x2="175" y2="50" stroke="black" stroke-width="2"/>
+        <polygon points="170,40 180,40 175,50" fill="black"/>
+      </svg>
 
-      <svg v-if='ABallVisible & earlyOutputA' class="arrow AArrow" width="20" height="60">
+
+      <svg v-if='AArrowVisible' class="arrow AArrow" width="20" height="60">
         <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
         <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
 
-      <svg v-if='BBallVisible & !earlyOutputA' class="arrow BArrow" width="20" height="60">
+      <svg v-if='BArrowVisible' class="arrow BArrow" width="20" height="60">
         <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
         <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
@@ -200,115 +201,91 @@ function runGame() {
 </template>
 
 <style scoped>
+.btnSpace {
+  height: 45px;
+  margin-top: 40px;
+}
+
 .gamedisplay {
-  width: 100%;
-  height: 450px;
-  padding: 20px;
   display: grid;
+  padding: 20px;
   grid-template-areas:
     '. earlyUrn .'
     '. earlyArrow .'
-    '. earlyBall .'
-    'diagonalArrows diagonalArrows diagonalArrows'
+    'ADiagonalArrow earlyBall BDiagonalArrow'
     'ALabel . BLabel'
-    'AUrn . BUrn'
+    'AUrn fixation BUrn'
     'AArrow . BArrow'
-    'ABall fixation BBall';
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto auto auto auto auto;
+    'ABall .  BBall';
+  grid-template-columns:  auto 0px auto;
+  grid-auto-rows: auto 60px 60px 40px auto 60px 50px;
   justify-items: center;
-  margin: 0 auto;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .gamedisplay > .earlyUrn {
   grid-area: earlyUrn;
 }
 
-.gamedisplay > .AUrn {
-  grid-area: AUrn;
-}
-
-.gamedisplay > .BUrn {
-  grid-area: BUrn;
-}
-
-.gamedisplay > .diagonalArrows {
-  grid-area: diagonalArrows;
-  justify-self: center;
-  height: 100px;
-  background-color: lightgray;
-}
-
-
-.gamedisplay > .AUrn {
-  grid-area: AUrn;
-}
-
-.gamedisplay > .BUrn {
-  grid-area: BUrn;
+.gamedisplay > .earlyArrow {
+  grid-area: earlyArrow;
 }
 
 .gamedisplay > .earlyBall {
   grid-area: earlyBall;
-  justify-self: center;
 }
 
-.gamedisplay > .earlyArrow {
-  grid-area: earlyArrow;
-  justify-self: center;
+.gamedisplay > .ADiagonalArrow {
+  grid-area: ADiagonalArrow;
+  margin-right: -150px;
+  margin-bottom: -30px;
+}
+
+.gamedisplay > .BDiagonalArrow {
+  grid-area: BDiagonalArrow;
+  margin-left: -150px;
+  margin-bottom: -30px;
 }
 
 .gamedisplay > .ALabel {
   grid-area: ALabel;
-  font-size: 40px;
+  font-size: 30pt;
+  font-weight: bold;
 }
 
 .gamedisplay > .BLabel {
   grid-area: BLabel;
-  font-size: 40px;
+  font-size: 30pt;
+  font-weight: bold;
+}
+
+.gamedisplay > .AUrn {
+  grid-area: AUrn;
+}
+
+.gamedisplay > .BUrn {
+  grid-area: BUrn;
 }
 
 .gamedisplay > .AArrow {
   grid-area: AArrow;
-  justify-self: center;
 }
 
 .gamedisplay > .BArrow {
   grid-area: BArrow;
-  justify-self: center;
 }
-
 
 .gamedisplay > .ABall {
   grid-area: ABall;
-  justify-self: center;
 }
-
-.gamedisplay > .BBall {
-  grid-area: BBall;
-  justify-self: center;
-}
-
 
 .gamedisplay > .fixation {
   grid-area: fixation;
 }
 
-.btnSpace {
-  height: 35px;
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* optional */
+.gamedisplay > .BBall {
+  grid-area: BBall;
 }
 
-.game{
-  background-color: lightgrey;
-  position: relative;
-  width: 100%;
-  height: 1000px;
-  overflow: hidden; /* or auto */
-  justify-content: center;
-}
 </style>

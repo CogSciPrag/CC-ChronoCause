@@ -15,6 +15,7 @@ jobs:
         folder:
           - ./01-experiments/01-exp-non-leakyUrns/pilot1
           - ./01-experiments/01-exp-non-leakyUrns/pilot2
+          - ./01-experiments/03-exp-leakyUrns/pilot1
 
     runs-on: ubuntu-latest
     steps:

@@ -281,7 +281,7 @@ const training_trials = _.filter(training_trials_all, function (i) {
 });
 
 training_trials.forEach(trial => {
-    if (trial['delay'] == 'simult') {
+  if (trial['delay'] == 'simult') {
     trial['delayedUrn'] = 'none';
   } else {
     trial['delayedUrn'] = _.sample(['left', 'right']);
@@ -343,8 +343,8 @@ export default {
         case 'long':
           delay = base_delay + 8000;
           break;
-          default:
-            delay = base_delay;
+        default:
+          delay = base_delay;
       }
       return delay;
     },
