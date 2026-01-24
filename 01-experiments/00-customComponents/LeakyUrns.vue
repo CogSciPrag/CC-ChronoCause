@@ -129,9 +129,9 @@ function runGame() {
         <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
       <LabeledBall v-if="earlyBallVisible" :color="outputColorEarly" :type="outputTypeEarly" class="earlyBall"
-                   :label="outputLabelEarly" id="earlyBall"/>
+                   :label="outputLabelEarly"/>
 
-      <div class="ALabel" id="ALabel">
+      <div class="ALabel">
         A
       </div>
 
@@ -239,13 +239,13 @@ function runGame() {
 .gamedisplay > .ADiagonalArrow {
   grid-area: ADiagonalArrow;
   margin-right: -150px;
-  margin-bottom: -30px;
+  margin-bottom: -20px;
 }
 
 .gamedisplay > .BDiagonalArrow {
   grid-area: BDiagonalArrow;
   margin-left: -150px;
-  margin-bottom: -30px;
+  margin-bottom: -20px;
 }
 
 .gamedisplay > .ALabel {
