@@ -1,0 +1,5 @@
+id,structure,early,late,gameOutcome,delay,attentionCheck
+1,conjunctive,solid,solid,win,short,true
+2,conjunctive,stripe,solid,lose,medium,true
+3,disjunctive,solid,stripe,win,short,true
+4,disjunctive,stripe,stripe,lose,medium,true
