@@ -137,14 +137,14 @@ defineProps({
 
 <style scoped>
 .urn {
-  width: 120px;
+  //width: 240px;
   border: 2px solid black;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-rows: 50px 50px;
   margin-bottom: 10px;
-  padding-bottom: 5px;
+  padding: 5px;
   padding-top: 10px;
   justify-self: center;
 
@@ -152,7 +152,7 @@ defineProps({
 
 .col {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
 }

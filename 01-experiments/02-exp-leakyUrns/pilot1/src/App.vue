@@ -120,25 +120,24 @@
         />
       </div>
 
-      When the player presses the button, a ball is released from the urn with black and purple balls.
+      When the player presses the button to start the game, a ball is released from the urn with black and purple balls.
       <ul>
-        <li>If the released ball has the letter <b>A</b> on it, a ball is then released from the <b>A</b> urn.</li>
-        <li>If the released ball has the letter <b>B</b> on it, a ball is then released from the <b>B</b> urn.</li>
+        <li>If the first urn releases a ball labeled <b>A</b>, the urn labeled <b>A</b> then releases a ball.</li>
+        <li>If the first urn releases a ball labeled <b>B</b>, the urn labeled <b>B</b> then releases a ball.</li>
       </ul>
 
       <p>
-        When the player presses the button, a ball is released from each urn.
         The player wins just in case
         <b>{{
             structure == "conjunctive" ? "both" : "at least one"
-          }}</b> {{
-          structure == "conjunctive" ? "balls are" : "ball is"
+          }}</b> of these balls {{
+          structure == "conjunctive" ? "are" : "is"
         }}
         <b>solid</b>.
       </p>
 
       <p>
-        Here are the possible outcomes when the first urn releases a ball with the letter <b>A</b> on it:
+        If the first urn releases a ball labeled  <b>A</b>, the possible outcomes are:
         <div class="outcomes">
           <div class="col">
             <LabeledBall color="black" :type='getType("black")' label='A'/>
@@ -161,7 +160,7 @@
         </div>
       </p>
       <p>
-        Here are the possible outcomes when the first urn releases a ball with the letter <b>B</b> on it:
+        If the first urn releases a ball labeled  <b>B</b>, the possible outcomes are:
         <div class="outcomes">
           <div class="col">
             <LabeledBall color="black" :type='getType("black")' label='B'/>
@@ -232,7 +231,7 @@
     'ALabel . BLabel'
     'AUrn . BUrn';
   grid-template-columns:  auto auto auto;
-  grid-template-rows: auto  40px auto;
+  grid-template-rows: auto  35px auto;
   justify-items: center;
   align-items: start;
   box-sizing: border-box;

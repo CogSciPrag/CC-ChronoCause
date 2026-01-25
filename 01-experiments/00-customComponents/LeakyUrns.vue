@@ -125,8 +125,8 @@ function runGame() {
       />
 
       <svg class="arrow earlyArrow" width="20" height="60">
-        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
-        <polygon points="5,50 15,50 10,60" fill="black"/>
+        <line x1="10" y1="0" x2="10" y2="40" stroke="black" stroke-width="2"/>
+        <polygon points="5,40 15,40 10,50" fill="black"/>
       </svg>
       <LabeledBall v-if="earlyBallVisible" :color="outputColorEarly" :type="outputTypeEarly" class="earlyBall"
                    :label="outputLabelEarly"/>
@@ -176,13 +176,13 @@ function runGame() {
 
 
       <svg v-if='AArrowVisible' class="arrow AArrow" width="20" height="60">
-        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
-        <polygon points="5,50 15,50 10,60" fill="black"/>
+        <line x1="10" y1="0" x2="10" y2="40" stroke="black" stroke-width="2"/>
+        <polygon points="5,40 15,40 10,50" fill="black"/>
       </svg>
 
       <svg v-if='BArrowVisible' class="arrow BArrow" width="20" height="60">
-        <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
-        <polygon points="5,50 15,50 10,60" fill="black"/>
+        <line x1="10" y1="0" x2="10" y2="40" stroke="black" stroke-width="2"/>
+        <polygon points="5,40 15,40 10,50" fill="black"/>
       </svg>
 
 
@@ -202,13 +202,12 @@ function runGame() {
 
 <style scoped>
 .btnSpace {
-  height: 45px;
+  height: 35px;
   margin-top: 40px;
 }
 
 .gamedisplay {
   display: grid;
-  padding: 20px;
   grid-template-areas:
     '. earlyUrn .'
     '. earlyArrow .'
@@ -218,7 +217,7 @@ function runGame() {
     'AArrow . BArrow'
     'ABall .  BBall';
   grid-template-columns:  auto 0px auto;
-  grid-auto-rows: auto 60px 60px 40px auto 60px 50px;
+  grid-auto-rows: auto 50px 40px 60px 110px 70px 20px;
   justify-items: center;
   align-items: center;
   box-sizing: border-box;
@@ -286,6 +285,11 @@ function runGame() {
 
 .gamedisplay > .BBall {
   grid-area: BBall;
+}
+
+.fixation {
+  animation: none !important;
+  opacity: 0.5;
 }
 
 </style>
