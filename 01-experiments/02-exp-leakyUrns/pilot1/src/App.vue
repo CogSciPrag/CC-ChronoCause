@@ -126,18 +126,18 @@
           </p>
 
           <ForcedChoiceInput
-              :response.sync="$magpie.measurements.response"
+              :response.sync="$magpie.measurements.comprehensionResponse"
               :options="['win', 'lose']"
-              @update:response="saveComprehensionResponse($magpie.measurements.response,trial.correctResponse)"/>
+              @update:response="saveComprehensionResponse($magpie.measurements.comprehensionResponse,trial.correctResponse)"/>
 
           <Record
               :data="{
                   trialType : 'comprehension-1',
                   trialNr : i+1,
-                  correctResponse: trial.correctResponse,
-                  leftColor : trial.leftColor,
-                  rightColor : trial.rightColor,
-                  response : $magpie.measurements.response,
+                  comprehensionCorrectResponse: trial.correctResponse,
+                  earlyBall : trial.earlyBall,
+                  lateBall : trial.lateBall,
+                  comprehensionResponse : $magpie.measurements.comprehensionResponse,
                   structure : structure
                 }"
           />
@@ -215,10 +215,10 @@
               :data="{
                   trialType : 'comprehension-2',
                   trialNr : i+1,
-                  correctResponse: trial.correctResponse,
-                  leftColor : trial.leftColor,
-                  rightColor : trial.rightColor,
-                  response : $magpie.measurements.response,
+                  comprehensionCorrectResponse: trial.correctResponse,
+                  earlyBall : trial.earlyBall,
+                  lateBall : trial.lateBall,
+                  comprehensionResponse : $magpie.measurements.comprehensionResponse,
                   structure : structure
                 }"
           />

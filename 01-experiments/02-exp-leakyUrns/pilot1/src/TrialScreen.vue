@@ -136,31 +136,32 @@ function getRightTiming() {
       <p>
         Which ball was released first?
         <MultipleChoiceInput
-            :response.sync="$magpie.measurements.responseAttention"
+            :response.sync="$magpie.measurements.attentionResponse"
             :options="[
                 'The ' + getLeftColor() + ' ball',
                 'The ' + getRightColor() + ' ball',
                 'Both balls were released at the same time']"/>
 
-        <button v-if="$magpie.measurements.responseAttention" @click="saveAndNextSlideTimeLog">Submit</button>
+        <button v-if="$magpie.measurements.attentionResponse" @click="saveAndNextSlideTimeLog">Submit</button>
       </p>
 
       <Record
           :data="{
               trialType : props.trialType + '-attention',
               trialNr : index + 1,
-              structure:props.trial.structure,
-              leftColor: props.trial.leftColor,
-              rightColor: props.trial.rightColor,
-              combo: props.trial.combo,
-              gameOutcome: props.trial.gameOutcome,
+              structure : props.trial.structure,
+              earlyBall : props.trial.earlyBall,
+              lateBall : props.trial.lateBall,
+              earlyEnd : props.trial.earlyEnd,
+              gameOutcome : props.trial.gameOutcome,
               delay: props.trial.delay,
               delayedUrn: props.trial.delayedUrn,
+              attentionCheck : props.trial.attentionCheck,
+              attentionResponse: $magpie.measurements.attentionResponse,
+              attentionCorrectResponse: props.trial.delayedUrn === 'none' ? 'Both balls were released at the same time':
+              (props.trial.delayedUrn =='left' ? 'The ' + props.trial.rightColor + ' ball' : 'The ' + props.trial.leftColor + ' ball'),
               beginClicked: $magpie.measurements.beginClicked,
-              submitClicked: $magpie.measurements.submitClicked,
-              responseAttention: $magpie.measurements.responseAttention,
-              correctResponseAttention: props.trial.delayedUrn === 'none' ? 'Both balls were released at the same time':
-              (props.trial.delayedUrn =='left' ? 'The ' + props.trial.rightColor + ' ball' : 'The ' + props.trial.leftColor + ' ball')
+              submitClicked: $magpie.measurements.submitClicked
             }"
       />
     </Slide>
@@ -223,21 +224,35 @@ function getRightTiming() {
           <button @click="saveAndNextScreenTimeLog">Submit</button>
         </p>
       </div>
-
       <div v-if="props.trial.earlyEnd">
         <p>
-          <b>Getting a {{ props.delayedUrn === "left" ? getRightColor() : getLeftColor() }} ball caused Alice to
+          <b>Getting a {{
+              props.trial.delayedUrn === "left" ? getColorRightUrn(props.trial.earlyBall) : getColorLeftUrn(props.trial.earlyBall)
+            }} ball caused Alice to
             {{ props.trial.gameOutcome }}.</b>
         </p>
-        <RatingInput
-            left="strongly disagree"
-            right="strongly agree"
-            :response.sync="props.delayedUrn === 'left' ? $magpie.measurements.responseLeft : $magpie.measurements.responseRight"
+        <div v-if="props.trial.delayedUrn === 'left'">
+          <RatingInput
+              left="strongly disagree"
+              right="strongly agree"
+              :response.sync="$magpie.measurements.responseRight"
+          />
+          <p v-if="$magpie.measurements.responseRight > 0">
+            <button @click="saveAndNextScreenTimeLog">Submit</button>
+          </p>
+        </div>
 
-        />
-        <p v-if="(props.delayedUrn === 'left' ? $magpie.measurements.responseLeft : $magpie.measurements.responseRight) > 0">
-          <button @click="saveAndNextScreenTimeLog">Submit</button>
-        </p>
+        <div v-else>
+          <RatingInput
+              left="strongly disagree"
+              right="strongly agree"
+              :response.sync="$magpie.measurements.responseLeft"
+          />
+          <p v-if="$magpie.measurements.responseLeft > 0">
+            <button @click="saveAndNextScreenTimeLog">Submit</button>
+          </p>
+        </div>
+
       </div>
 
 
@@ -246,12 +261,13 @@ function getRightTiming() {
               trialType : props.trialType,
               trialNr : index + 1,
               structure:props.trial.structure,
-              leftColor: props.trial.leftColor,
-              rightColor: props.trial.rightColor,
-              combo: props.trial.combo,
+              earlyBall : props.trial.earlyBall,
+              lateBall : props.trial.lateBall,
+              earlyEnd : props.trial.earlyEnd,
               gameOutcome: props.trial.gameOutcome,
               delay: props.trial.delay,
               delayedUrn: props.trial.delayedUrn,
+              attentionCheck : props.trial.attentionCheck,
               responseLeft: $magpie.measurements.responseLeft,
               responseRight: $magpie.measurements.responseRight,
               beginClicked: $magpie.measurements.beginClicked,
