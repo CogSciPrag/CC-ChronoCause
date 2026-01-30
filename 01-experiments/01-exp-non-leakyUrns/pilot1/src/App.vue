@@ -244,7 +244,7 @@
 <script>
 import _ from "lodash";
 
-import NonLeakyUrns from "../../../00-customComponents/NonLeakyUrns.vue";
+import UrnGame from "../../../00-customComponents/UrnGame.vue";
 import Urn from "../../../00-customComponents/Urn.vue";
 import Ball from "../../../00-customComponents/Ball.vue";
 
@@ -294,7 +294,7 @@ const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
 
 export default {
   name: "App",
-  components: {TrialScreen, Urn, NonLeakyUrns, Ball},
+  components: {TrialScreen, Urn, UrnGame, Ball},
   data() {
     return {
       structure: structure,

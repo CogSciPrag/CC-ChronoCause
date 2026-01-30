@@ -1,13 +1,31 @@
+<!--
+Screen with multiple slides representing one trial (both main and training)
+
+Parameters:
+  'trialType' - description of the trial in the output csv
+  'trial' - current trial object
+  'index' - index of current trial
+  'length' - number of either main or training trials
+  'getType' - used to pass the getType function defined in App.vue
+  'getDelay' - used to pass the getDelay function defined in App.vue
+  'which_urn_prompted_first' - used to pass the which_urn_prompted_first value
+
+Example usage:
+  <template v-for="(trial, i) of training_trials">
+    <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType" :getDelay="getDelay"/>
+  </template>
+-->
+
 <script setup>
 
-import LeakyUrns from "../../../00-customComponents/LeakyUrns.vue";
-import NonLeakyUrns from "../../../00-customComponents/NonLeakyUrns.vue";
+import UrnGame from "../../../00-customComponents/UrnGame.vue";
 
-defineProps({
+const props = defineProps({
   trialType: String,
   trial: Object,
   index: Number,
   length: Number,
+  getType: Function,
   getDelay: Function,
   which_urn_prompted_first: String
 });
@@ -23,43 +41,96 @@ function saveAndNextSlideTimeLog() {
   $magpie.nextSlide();
 }
 
+function getColorLeftUrn(type) {
+  if (type === "solid") {
+    return "red"
+  } else {
+    return "blue"
+  }
+}
+
+function getColorRightUrn(type) {
+  if (type === "solid") {
+    return "yellow"
+  } else {
+    return "green"
+  }
+}
+
+function getLeftColor() {
+  return props.trial.delayedUrn === 'left' ? getColorLeftUrn(props.trial.lateBall) : getColorLeftUrn(props.trial.earlyBall)
+}
+
+function getRightColor() {
+  return props.trial.delayedUrn === 'left' ? getColorRightUrn(props.trial.earlyBall) : getColorRightUrn(props.trial.lateBall)
+}
+
+function getLeftType() {
+  return props.trial.delayedUrn === 'left' ? props.trial.lateBall : props.trial.earlyBall;
+}
+
+function getRightType() {
+  return props.trial.delayedUrn === 'left' ? props.trial.earlyBall : props.trial.lateBall;
+}
+
+function getLeftTiming() {
+  return props.trial.delayedUrn === 'left' ? props.getDelay(props.trial.delay) : props.getDelay('base');
+}
+
+function getRightTiming() {
+  return props.trial.delayedUrn === 'left' ? props.getDelay('base') : props.getDelay(props.trial.delay);
+}
+
 </script>
 
 <template>
   <Screen :progress="index/length">
     <Slide>
       Press the button to start a new round of Alice's game:
-      <LeakyUrns
-          :timingEarly="getDelay('base')"
-          :timingLate="getDelay(trial.delay)"
-          :earlyOutputA="trial.outputLabelEarly==='A'"
-          :outputColorEarly="trial.early === 'solid' ? 'black' : 'purple'"
-          :outputTypeEarly=trial.early
-          :outputLabelEarly=trial.outputLabelEarly
-          :outputColorA="trial.late === 'solid' ? 'red' : 'blue'"
-          :outputTypeA=trial.late
-          :outputColorB="trial.late === 'solid' ? 'yellow' : 'green'"
-          :outputTypeB=trial.late
+      <UrnGame
+          firstColorLeft='red'
+          :firstTypeLeft='getType("red")'
+          secondColorLeft='blue'
+          :secondTypeLeft='getType("blue")'
+          firstColorRight='yellow'
+          :firstTypeRight='getType("yellow")'
+          secondColorRight='green'
+          :secondTypeRight='getType("green")'
+          :outputColorLeft="getLeftColor()"
+          :outputColorRight="getRightColor()"
+          :outputTypeLeft="getLeftType()"
+          :outputTypeRight="getRightType()"
+          :timingLeft="getLeftTiming()"
+          :timingRight="getRightTiming()"
+          :enabled="true"
+          :earlyEnd="props.trial.earlyEnd"
+          :delayedUrn="props.trial.delayedUrn"
       />
     </Slide>
 
-    <Slide v-if="trial.attentionCheck">
+    <Slide v-if="props.trial.attentionCheck">
       Press the button to start a new round of Alice's game:
-      <LeakyUrns
-          :timingEarly="getDelay('base')"
-          :timingLate="getDelay(trial.delay)"
-          :earlyOutputA="trial.outputLabelEarly==='A'"
-          :outputColorEarly="trial.early === 'solid' ? 'black' : 'purple'"
-          :outputTypeEarly=trial.early
-          :outputLabelEarly=trial.outputLabelEarly
-          :outputColorA="trial.late === 'solid' ? 'red' : 'blue'"
-          :outputTypeA=trial.late
-          :outputColorB="trial.late === 'solid' ? 'yellow' : 'green'"
-          :outputTypeB=trial.late
+      <UrnGame
+          firstColorLeft='red'
+          :firstTypeLeft='getType("red")'
+          secondColorLeft='blue'
+          :secondTypeLeft='getType("blue")'
+          firstColorRight='yellow'
+          :firstTypeRight='getType("yellow")'
+          secondColorRight='green'
+          :secondTypeRight='getType("green")'
+          :outputColorLeft="getLeftColor()"
+          :outputColorRight="getRightColor()"
+          :outputTypeLeft="getLeftType()"
+          :outputTypeRight="getRightType()"
+          :timingLeft="getLeftTiming()"
+          :timingRight="getRightTiming()"
           :enabled="false"
+          :earlyEnd="props.trial.earlyEnd"
+          :delayedUrn="props.trial.delayedUrn"
       />
 
-      Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
+      Alice <b>{{ props.trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
       <br/>
 
       <p>
@@ -67,99 +138,126 @@ function saveAndNextSlideTimeLog() {
         <MultipleChoiceInput
             :response.sync="$magpie.measurements.responseAttention"
             :options="[
-                'The ' + (trial.early === 'solid' ? 'black' : 'purple') + ' ball',
-                'The ' + (trial.outputLabelEarly==='A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green'))  + ' ball',
+                'The ' + getLeftColor() + ' ball',
+                'The ' + getRightColor() + ' ball',
                 'Both balls were released at the same time']"/>
 
         <button v-if="$magpie.measurements.responseAttention" @click="saveAndNextSlideTimeLog">Submit</button>
       </p>
 
-      <!--      <Record-->
-      <!--          :data="{-->
-      <!--              trialType : trialType + '-attention',-->
-      <!--              trialNr : index + 1,-->
-      <!--              structure:trial.structure,-->
-      <!--              leftColor: trial.leftColor,-->
-      <!--              rightColor: trial.rightColor,-->
-      <!--              combo: trial.combo,-->
-      <!--              gameOutcome: trial.gameOutcome,-->
-      <!--              delay: trial.delay,-->
-      <!--              delayedUrn: trial.delayedUrn,-->
-      <!--              beginClicked: $magpie.measurements.beginClicked,-->
-      <!--              submitClicked: $magpie.measurements.submitClicked,-->
-      <!--              responseAttention: $magpie.measurements.responseAttention,-->
-      <!--              correctResponseAttention: trial.delayedUrn == 'none' ? 'Both balls were released at the same time':-->
-      <!--              (trial.delayedUrn =='left' ? 'The ' + trial.rightColor + ' ball' : 'The ' + trial.leftColor + ' ball')-->
-      <!--            }"-->
-      <!--      />-->
+      <Record
+          :data="{
+              trialType : props.trialType + '-attention',
+              trialNr : index + 1,
+              structure:props.trial.structure,
+              leftColor: props.trial.leftColor,
+              rightColor: props.trial.rightColor,
+              combo: props.trial.combo,
+              gameOutcome: props.trial.gameOutcome,
+              delay: props.trial.delay,
+              delayedUrn: props.trial.delayedUrn,
+              beginClicked: $magpie.measurements.beginClicked,
+              submitClicked: $magpie.measurements.submitClicked,
+              responseAttention: $magpie.measurements.responseAttention,
+              correctResponseAttention: props.trial.delayedUrn === 'none' ? 'Both balls were released at the same time':
+              (props.trial.delayedUrn =='left' ? 'The ' + props.trial.rightColor + ' ball' : 'The ' + props.trial.leftColor + ' ball')
+            }"
+      />
     </Slide>
 
     <Slide>
       Press the button to start a new round of Alice's game:
-
-      <LeakyUrns
-          :timingEarly="getDelay('base')"
-          :timingLate="getDelay(trial.delay)"
-          :earlyOutputA="trial.outputLabelEarly==='A'"
-          :outputColorEarly="trial.early === 'solid' ? 'black' : 'purple'"
-          :outputTypeEarly=trial.early
-          :outputLabelEarly=trial.outputLabelEarly
-          :outputColorA="trial.late === 'solid' ? 'red' : 'blue'"
-          :outputTypeA=trial.late
-          :outputColorB="trial.late === 'solid' ? 'yellow' : 'green'"
-          :outputTypeB=trial.late
+      <UrnGame
+          firstColorLeft='red'
+          :firstTypeLeft='getType("red")'
+          secondColorLeft='blue'
+          :secondTypeLeft='getType("blue")'
+          firstColorRight='yellow'
+          :firstTypeRight='getType("yellow")'
+          secondColorRight='green'
+          :secondTypeRight='getType("green")'
+          :outputColorLeft="getLeftColor()"
+          :outputColorRight="getRightColor()"
+          :outputTypeLeft="getLeftType()"
+          :outputTypeRight="getRightType()"
+          :timingLeft="getLeftTiming()"
+          :timingRight="getRightTiming()"
           :enabled="false"
+          :earlyEnd="props.trial.earlyEnd"
+          :delayedUrn="props.trial.delayedUrn"
       />
 
-      Alice <b>{{ trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
+      Alice <b>{{ props.trial.gameOutcome === "win" ? "won" : "lost" }}</b> the game.
       <br/>
 
       <p>
         Do you agree with the following statements?
       </p>
 
-      <p>
-        <b>Getting a {{ which_urn_prompted_first === "early" ? (trial.early === 'solid' ? 'black' : 'purple') :(trial.outputLabelEarly==='A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green')) }} ball caused Alice to
-          {{
-            trial.gameOutcome
-          }}.</b>
-      </p>
-      <RatingInput
-          left="strongly disagree"
-          right="strongly agree"
-          :response.sync="$magpie.measurements.responseA"
-      />
+      <div v-if="!props.trial.earlyEnd">
+        <p>
+          <b>Getting a {{ props.which_urn_prompted_first === "left" ? getLeftColor() : getRightColor() }} ball caused
+            Alice to
+            {{
+              props.trial.gameOutcome
+            }}.</b>
+        </p>
+        <RatingInput
+            left="strongly disagree"
+            right="strongly agree"
+            :response.sync="$magpie.measurements.responseLeft"
+        />
 
-      <p>
-        <b>Getting a {{ which_urn_prompted_first === "early" ? (trial.outputLabelEarly === 'A' ? (trial.late === 'solid' ? 'red' : 'blue') : (trial.late === 'solid' ? 'yellow' : 'green')) : (trial.early === 'solid' ? 'black' : 'purple')}} ball caused Alice to
-          {{ trial.gameOutcome }}.</b>
-      </p>
-      <RatingInput
-          left="strongly disagree"
-          right="strongly agree"
-          :response.sync="$magpie.measurements.responseB"
-      />
-      <p v-if="$magpie.measurements.responseA > 0 && $magpie.measurements.responseB > 0">
-        <button @click="saveAndNextScreenTimeLog">Submit</button>
-      </p>
+        <p>
+          <b>Getting a {{ props.which_urn_prompted_first === "left" ? getRightColor() : getLeftColor() }} ball caused
+            Alice to
+            {{ props.trial.gameOutcome }}.</b>
+        </p>
+        <RatingInput
+            left="strongly disagree"
+            right="strongly agree"
+            :response.sync="$magpie.measurements.responseRight"
 
-<!--      <Record-->
-<!--          :data="{-->
-<!--              trialType : trialType,-->
-<!--              trialNr : index + 1,-->
-<!--              structure:trial.structure,-->
-<!--              leftColor: trial.leftColor,-->
-<!--              rightColor: trial.rightColor,-->
-<!--              combo: trial.combo,-->
-<!--              gameOutcome: trial.gameOutcome,-->
-<!--              delay: trial.delay,-->
-<!--              delayedUrn: trial.delayedUrn,-->
-<!--              responseLeft: $magpie.measurements.responseLeft,-->
-<!--              responseRight: $magpie.measurements.responseRight,-->
-<!--              beginClicked: $magpie.measurements.beginClicked,-->
-<!--              submitClicked: $magpie.measurements.submitClicked-->
-<!--            }"-->
-<!--      />-->
+        />
+        <p v-if="$magpie.measurements.responseLeft > 0 && $magpie.measurements.responseRight > 0">
+          <button @click="saveAndNextScreenTimeLog">Submit</button>
+        </p>
+      </div>
+
+      <div v-if="props.trial.earlyEnd">
+        <p>
+          <b>Getting a {{ props.delayedUrn === "left" ? getRightColor() : getLeftColor() }} ball caused Alice to
+            {{ props.trial.gameOutcome }}.</b>
+        </p>
+        <RatingInput
+            left="strongly disagree"
+            right="strongly agree"
+            :response.sync="props.delayedUrn === 'left' ? $magpie.measurements.responseLeft : $magpie.measurements.responseRight"
+
+        />
+        <p v-if="(props.delayedUrn === 'left' ? $magpie.measurements.responseLeft : $magpie.measurements.responseRight) > 0">
+          <button @click="saveAndNextScreenTimeLog">Submit</button>
+        </p>
+      </div>
+
+
+      <Record
+          :data="{
+              trialType : props.trialType,
+              trialNr : index + 1,
+              structure:props.trial.structure,
+              leftColor: props.trial.leftColor,
+              rightColor: props.trial.rightColor,
+              combo: props.trial.combo,
+              gameOutcome: props.trial.gameOutcome,
+              delay: props.trial.delay,
+              delayedUrn: props.trial.delayedUrn,
+              responseLeft: $magpie.measurements.responseLeft,
+              responseRight: $magpie.measurements.responseRight,
+              beginClicked: $magpie.measurements.beginClicked,
+              submitClicked: $magpie.measurements.submitClicked
+            }"
+      />
     </Slide>
   </Screen>
 </template>

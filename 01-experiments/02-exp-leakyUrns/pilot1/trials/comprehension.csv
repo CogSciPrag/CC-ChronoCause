@@ -1,9 +1,7 @@
-structure,trialNr,leftColor,rightColor,correctResponse
-disjunctive,1,red,yellow,win
-disjunctive,2,blue,yellow,win
-disjunctive,3,red,green,win
-disjunctive,4,blue,green,lose
-conjunctive,1,red,yellow,win
-conjunctive,2,blue,yellow,lose
-conjunctive,3,red,green,lose
-conjunctive,4,blue,green,lose
+structure,trialNr,earlyBall,lateBall,correctResponse,delayedUrn
+conjunctive,1,solid,solid,win,left
+conjunctive,2,solid,stripe,lose,right
+conjunctive,3,stripe,none,lose,left
+disjunctive,1,solid,none,win,left
+disjunctive,2,stripe,solid,win,right
+disjunctive,3,stripe,stripe,lose,left

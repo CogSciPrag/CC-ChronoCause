@@ -69,6 +69,11 @@ defineProps({
   --name: 'B';
 }
 
+.none{
+  --color: white;
+  --name: 'X';
+}
+
 .ball::before {
   content: var(--name);
 }

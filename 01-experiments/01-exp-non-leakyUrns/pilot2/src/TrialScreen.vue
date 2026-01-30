@@ -18,7 +18,7 @@ Example usage:
 
 <script setup>
 
-import NonLeakyUrns from "../../../00-customComponents/NonLeakyUrns.vue";
+import UrnGame from "../../../00-customComponents/UrnGame.vue";
 
 defineProps({
   trialType: String,
@@ -41,13 +41,14 @@ function saveAndNextSlideTimeLog() {
   $magpie.nextSlide();
 }
 
+
 </script>
 
 <template>
   <Screen :progress="index/length">
     <Slide>
       Press the button to start a new round of Alice's game:
-      <NonLeakyUrns
+      <UrnGame
           firstColorLeft='red'
           :firstTypeLeft='getType("red")'
           secondColorLeft='blue'
@@ -67,7 +68,7 @@ function saveAndNextSlideTimeLog() {
 
     <Slide v-if="trial.attentionCheck">
       Press the button to start a new round of Alice's game:
-      <NonLeakyUrns
+      <UrnGame
           firstColorLeft='red'
           :firstTypeLeft='getType("red")'
           secondColorLeft='blue'
@@ -120,7 +121,7 @@ function saveAndNextSlideTimeLog() {
 
     <Slide>
       Press the button to start a new round of Alice's game:
-      <NonLeakyUrns
+      <UrnGame
           firstColorLeft='red'
           :firstTypeLeft='getType("red")'
           secondColorLeft='blue'

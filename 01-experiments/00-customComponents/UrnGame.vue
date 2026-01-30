@@ -19,15 +19,14 @@ Parameters:
   'secondCountLeft' - number of balls in the right column of the left urn; Value: number
   'firstCountRight' - number of balls in the left column of the right urn; Value: number
   'secondCountRight' - number of balls in the right column of the right urn; Value: number
-  'enabled' - if not enabled, the output balls are visible and the user cannot run the animation: Value: boolean
   'outputColorLeft' - colour of a ball released from the left urn; Options: as defined in Urn.vue
   'outputColorRight' - colour of a ball released from the left urn; Options: as defined in Urn.vue
   'outputTypeLeft' - type of a ball released from the left urn; Options: as defined in Urn.vue
   'outputTypeRight' - type of a ball released from the left urn; Options: as defined in Urn.vue
-
+  'enabled' - if not enabled, the output balls are visible and the user cannot run the animation: Value: boolean
 
 Example usage:
-  <NonLeakyUrns
+  <UrnGame
     :timingLeft="1000"
     :timingRight="3000"
     firstColorLeft="red"
@@ -117,10 +116,6 @@ const props = defineProps({
     type: Number,
     default: 5
   },
-  enabled: {
-    type: Boolean,
-    default: true
-  },
   outputColorLeft: {
     type: String,
     default: 'gold'
@@ -136,39 +131,101 @@ const props = defineProps({
   outputTypeRight: {
     type: String,
     default: 'solid'
+  },
+  enabled: {
+    type: Boolean,
+    default: true
+  },
+  earlyEnd: {
+    type: Boolean,
+    default: false
+  },
+  delayedUrn: {
+    type:String,
+    default: "left"
   }
 });
 
 const leftBallVisible = props.enabled ? ref(false) : ref(true);
 const rightBallVisible = props.enabled ? ref(false) : ref(true);
 const beginBtnVisible = props.enabled ? ref(true) : ref(false);
+const leftArrowVisible = ref(true);
+const rightArrowVisible = ref(true);
 const fixationVisible = ref(false);
+const leftIsEarlier = props.timingLeft < props.timingRight;
+const leftIsGreyedOut = ref(false);
+const rightIsGreyedOut = ref(false);
+
+if (!props.enabled && props.earlyEnd) {
+  if (props.delayedUrn === 'right') {
+    rightIsGreyedOut.value = true;
+    rightArrowVisible.value = false;
+    rightBallVisible.value = false;
+  } else {
+    leftIsGreyedOut.value = true;
+    leftArrowVisible.value = false;
+    leftBallVisible.value = false;
+  }
+}
+
+
+console.log(props.earlyEnd, leftIsEarlier);
 
 function runGame() {
   $magpie.measurements.beginClicked = Date.now();
-  const fixationTiming =
-      props.timingLeft > props.timingRight ? props.timingLeft : props.timingRight;
 
-  fixationVisible.value = true;
-  beginBtnVisible.value = false;
+  if (props.earlyEnd) {
+    fixationVisible.value = true;
+    beginBtnVisible.value = false;
 
-  setTimeout(() => {
-    leftBallVisible.value = true;
-  }, props.timingLeft);
+    if (leftIsEarlier) {
+      setTimeout(() => {
+        leftBallVisible.value = true;
+        rightIsGreyedOut.value = true;
+        rightArrowVisible.value = false;
+        fixationVisible.value = false;
+      }, props.timingLeft);
 
-  setTimeout(() => {
-    rightBallVisible.value = true;
-  }, props.timingRight);
+      setTimeout(() => {
+        $magpie.nextSlide();
+      }, props.timingLeft + 1000);
+    } else {
+      setTimeout(() => {
+        rightBallVisible.value = true;
+        leftIsGreyedOut.value = true;
+        leftArrowVisible.value = false;
+        fixationVisible.value = false;
+      }, props.timingRight);
 
-  setTimeout(() => {
-    fixationVisible.value = false;
-  }, fixationTiming);
+      setTimeout(() => {
+        $magpie.nextSlide();
+      }, props.timingRight + 1000);
+    }
 
-  setTimeout(() => {
-    $magpie.nextSlide();
-  }, fixationTiming + 1000);
+  } else {
+    const fixationTiming =
+        props.timingLeft > props.timingRight ? props.timingLeft : props.timingRight;
+
+    fixationVisible.value = true;
+    beginBtnVisible.value = false;
+
+    setTimeout(() => {
+      leftBallVisible.value = true;
+    }, props.timingLeft);
+
+    setTimeout(() => {
+      rightBallVisible.value = true;
+    }, props.timingRight);
+
+    setTimeout(() => {
+      fixationVisible.value = false;
+    }, fixationTiming);
+
+    setTimeout(() => {
+      $magpie.nextSlide();
+    }, fixationTiming + 1000);
+  }
 }
-
 
 </script>
 
@@ -185,7 +242,8 @@ function runGame() {
           :secondColor="secondColorLeft"
           :secondType="secondTypeLeft"
           :secondCount="secondCountLeft"
-          class="leftUrn"/>
+          class="leftUrn"
+          :class="{leftGreyedOut : leftIsGreyedOut}"/>
       <Urn
           :firstColor="firstColorRight"
           :firstType="firstTypeRight"
@@ -193,14 +251,15 @@ function runGame() {
           :secondColor="secondColorRight"
           :secondType="secondTypeRight"
           :secondCount="secondCountRight"
-          class="rightUrn"/>
+          class="rightUrn"
+          :class="{rightGreyedOut : rightIsGreyedOut}"/>
 
-      <svg class="arrow leftArrow" width="20" height="60">
+      <svg v-if="leftArrowVisible" class="arrow leftArrow" width="20" height="60">
         <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
         <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
 
-      <svg class="arrow rightArrow" width="20" height="60">
+      <svg v-if="rightArrowVisible" class="arrow rightArrow" width="20" height="60">
         <line x1="10" y1="0" x2="10" y2="50" stroke="black" stroke-width="2"/>
         <polygon points="5,50 15,50 10,60" fill="black"/>
       </svg>
@@ -277,4 +336,13 @@ function runGame() {
   height: 35px;
   margin-top: 40px;
 }
+
+.leftGreyedOut {
+  opacity: 0.3;
+}
+
+.rightGreyedOut {
+  opacity: 0.3;
+}
+
 </style>

@@ -1,196 +1,245 @@
 <template>
-  <Experiment title="magpie demo">
-        <InstructionScreen :title="'Welcome'">
-          Hi, thanks for taking part!
-          In this experiment, you will be introduced to a simple game.
-          Then, you will see a few rounds of the game being played and you will be asked to make some judgements.
-        </InstructionScreen>
+  <Experiment title="ChronoCause">
 
-    <InstructionScreen :title="'Game Rules'">
-      <p>
-        In the game, the player sees these three urns, which each contain both <b>solid</b> and <b>striped</b> balls.
-        There are always the same 8 balls in each urn: 4 of the balls are solid, and 4 are striped.
-        The black and purple balls in the first urn are labeled with letters <b>A</b> or <b>B</b> and the two other urns are labeled <b>A</b> and <b>B</b>.
-      </p>
-
-      <div class="urns">
-        <LabeledUrn
-            firstColor="black"
-            secondColor="purple"
-            thirdColor="black"
-            fourthColor="purple"
-            :firstCount="2"
-            :secondCount="2"
-            :thirdCount="2"
-            :fourthCount="2"
-            firstType="solid"
-            secondType="stripe"
-            thirdType="solid"
-            fourthType="stripe"
-            firstLabel="A"
-            secondLabel="A"
-            thirdLabel="B"
-            fourthLabel="B"
-            class="earlyUrn"
-        />
-
-        <div class="ALabel">A</div>
-
-        <div class="BLabel">B</div>
-
-        <LabeledUrn
-            firstColor='red'
-            firstType='solid'
-            :firstCount=4
-            :secondCount=4
-            secondColor='blue'
-            secondType='stripe'
-            firstLabel=''
-            secondLabel=''
-            class="AUrn"
-        />
-        <LabeledUrn
-            firstColor='yellow'
-            firstType='solid'
-            :firstCount=4
-            :secondCount=4
-            secondColor='green'
-            secondType='stripe'
-            firstLabel=''
-            secondLabel=''
-            class="BUrn"
-        />
-      </div>
-
+    <InstructionScreen :title="'Welcome'">
+      Hi, thanks for taking part!
+      In this experiment, you will be introduced to a simple game.
+      Then, you will see a few rounds of the game being played and you will be asked to make some judgements.
+      <div class="pool-ball"></div>
     </InstructionScreen>
 
-    <InstructionScreen :title="'Game Rules'">
+    <InstructionScreen :titles="'Game Rules'">
       <p>
-        In the game, the player sees these three urns, which each contain both <b>solid</b> and <b>striped</b> balls.
-        There are always the same 8 balls in each urn: 4 of the balls are solid, and 4 are striped.
-        The black and purple balls in the first urn are labeled with letters <b>A</b> or <b>B</b> and the two other urns are labeled <b>A</b> and <b>B</b>.
+        In the game, the player sees these two urns, which each contain both <b>solid</b> and <b>striped</b> balls.
+        There are always the same 10 balls in each urn: 5 of the balls are solid, and 5 are striped.
       </p>
 
       <div class="urns">
-        <LabeledUrn
-            firstColor="black"
-            secondColor="purple"
-            thirdColor="black"
-            fourthColor="purple"
-            :firstCount="2"
-            :secondCount="2"
-            :thirdCount="2"
-            :fourthCount="2"
-            firstType="solid"
-            secondType="stripe"
-            thirdType="solid"
-            fourthType="stripe"
-            firstLabel="A"
-            secondLabel="A"
-            thirdLabel="B"
-            fourthLabel="B"
-            class="earlyUrn"
-        />
-
-        <div class="ALabel">A</div>
-
-        <div class="BLabel">B</div>
-
-        <LabeledUrn
+        <Urn
             firstColor='red'
-            firstType='solid'
-            :firstCount=4
-            :secondCount=4
+            :firstType='getType("red")'
+            :firstCount=5
             secondColor='blue'
-            secondType='stripe'
-            firstLabel=''
-            secondLabel=''
-            class="AUrn"
+            :secondType='getType("blue")'
+            :secondCount=5
         />
-        <LabeledUrn
+        <Urn
             firstColor='yellow'
-            firstType='solid'
-            :firstCount=4
-            :secondCount=4
+            :firstType='getType("yellow")'
+            :firstCount=5
             secondColor='green'
-            secondType='stripe'
-            firstLabel=''
-            secondLabel=''
-            class="BUrn"
+            :secondType='getType("green")'
+            :secondCount=5
         />
       </div>
+    </InstructionScreen>
 
-      When the player presses the button to start the game, a ball is released from the urn with black and purple balls.
-      <ul>
-        <li>If the first urn releases a ball labeled <b>A</b>, the urn labeled <b>A</b> then releases a ball.</li>
-        <li>If the first urn releases a ball labeled <b>B</b>, the urn labeled <b>B</b> then releases a ball.</li>
-      </ul>
-
+    <InstructionScreen :titles="'Game Rules'">
       <p>
+        In the game, the player sees these two urns, which each contain both <b>solid</b> and <b>striped</b> balls.
+        There are always the same 10 balls in each urn: 5 of the balls are solid, and 5 are striped.
+      </p>
+
+      <div class="urns">
+        <Urn
+            firstColor='red'
+            :firstType='getType("red")'
+            :firstCount=5
+            secondColor='blue'
+            :secondType='getType("blue")'
+            :secondCount=5
+
+        />
+        <Urn
+            firstColor='yellow'
+            :firstType='getType("yellow")'
+            :firstCount=5
+            secondColor='green'
+            :secondType='getType("green")'
+            :secondCount=5
+        />
+      </div>
+      <p>
+        When the player presses the button, a ball is released from each urn.
         The player wins just in case
         <b>{{
             structure == "conjunctive" ? "both" : "at least one"
-          }}</b> of these balls {{
-          structure == "conjunctive" ? "are" : "is"
+          }}</b> {{
+          structure == "conjunctive" ? "balls are" : "ball is"
         }}
         <b>solid</b>.
       </p>
-
       <p>
-        If the first urn releases a ball labeled  <b>A</b>, the possible outcomes are:
-        <div class="outcomes">
-          <div class="col">
-            <LabeledBall color="black" :type='getType("black")' label='A'/>
-            <LabeledBall color="purple" :type='getType("purple")' label='A'/>
-            <LabeledBall color="black" :type='getType("black")' label='A'/>
-            <LabeledBall color="purple" :type='getType("purple")' label='A'/>
-          </div>
-          <div class="col">
-            <LabeledBall color="red" :type='getType("red")'/>
-            <LabeledBall color="red" :type='getType("red")'/>
-            <LabeledBall color="blue" :type='getType("green")'/>
-            <LabeledBall color="blue" :type='getType("blue")'/>
-          </div>
-          <div class="col">
-            <p>WIN</p>
-            <p>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
-            <p>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
-            <p>LOSE</p>
-          </div>
-        </div>
+        However, the balls may be released at different times. If the first ball released from either urn is
+        <b>{{ structure === "conjunctive" ? "striped" : "solid" }},
+          no
+          ball is released from the other urn</b>, and the game ends in a
+        <b>{{ structure === "conjunctive" ? "loss" : "win" }}</b>.
       </p>
       <p>
-        If the first urn releases a ball labeled  <b>B</b>, the possible outcomes are:
-        <div class="outcomes">
-          <div class="col">
-            <LabeledBall color="black" :type='getType("black")' label='B'/>
-            <LabeledBall color="purple" :type='getType("purple")' label='B'/>
-            <LabeledBall color="black" :type='getType("black")' label='B'/>
-            <LabeledBall color="purple" :type='getType("purple")' label='B'/>
-          </div>
-          <div class="col">
-            <LabeledBall color="yellow" :type='getType("yellow")'/>
-            <LabeledBall color="yellow" :type='getType("yellow")'/>
-            <LabeledBall color="green" :type='getType("green")'/>
-            <LabeledBall color="green" :type='getType("green")'/>
-          </div>
-          <div class="col">
-            <p>WIN</p>
-            <p>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
-            <p>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
-            <p>LOSE</p>
-          </div>
+        Here are the possible outcomes:
+      </p>
+      <div class="outcomes">
+        <div class="col first">
+          <Ball class='firstFirst' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "solid": "stripe"'/>
+          <Ball class='firstSecond' :class="{disjAnimation: structure=='disjunctive'}" color="none" type='solid'/>
+          <Ball class='firstThird' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "stripe": "solid"'/>
         </div>
+        <div class="col second">
+          <Ball class='secondFirst' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "solid": "stripe"'/>
+          <Ball class='secondSecond' :class="{disjAnimation: structure=='disjunctive'}" color="none" type='stripe'/>
+          <Ball class='secondThird' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "stripe": "solid"'/>
+        </div>
+        <div class="col third">
+          <p class='thirdFirst'>{{ structure == "conjunctive" ? "WIN" : "LOSE" }}</p>
+          <p class='thirdSecond'>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
+          <p class="thirdThird">{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
+        </div>
+      </div>
+    </InstructionScreen>
+
+
+    <template v-for="(trial, i) in comprehension">
+      <Screen>
+        <Slide>
+          <p>
+            Remember, the player wins just in case in case
+            <b>{{ structure == "conjunctive" ? "both" : "at least one" }}</b>
+            {{ structure == "conjunctive" ? "balls are" : "ball is" }}
+            <b>solid</b>.
+          </p>
+
+          To make sure you understand, please select whether a player would win or lose when the following balls are
+          released:
+
+          <p class="outcomeBalls">
+            <Ball class="col" :class="trial.delayedUrn === 'left' ? 'compLate' : 'compEarly'"
+                  :color="trial.delayedUrn === 'left' ? getColorLeftUrn(trial.lateBall) : getColorLeftUrn(trial.earlyBall)"
+                  :type="trial.delayedUrn === 'left' ? trial.lateBall : trial.earlyBall"/>
+            <Ball class="col" :class="trial.delayedUrn === 'left' ? 'compEarly' : 'compLate'"
+                  :color="trial.delayedUrn === 'left' ? getColorRightUrn(trial.earlyBall) : getColorRightUrn(trial.lateBall)"
+                  :type="trial.delayedUrn === 'left' ? trial.earlyBall : trial.lateBall"/>
+          </p>
+
+          <ForcedChoiceInput
+              :response.sync="$magpie.measurements.response"
+              :options="['win', 'lose']"
+              @update:response="saveComprehensionResponse($magpie.measurements.response,trial.correctResponse)"/>
+
+          <Record
+              :data="{
+                  trialType : 'comprehension-1',
+                  trialNr : i+1,
+                  correctResponse: trial.correctResponse,
+                  leftColor : trial.leftColor,
+                  rightColor : trial.rightColor,
+                  response : $magpie.measurements.response,
+                  structure : structure
+                }"
+          />
+        </Slide>
+      </Screen>
+    </template>
+
+    <InstructionScreen>
+      <p v-if="!comprehensionFailed">Great, you understood the task! Let’s begin.</p>
+
+      <p v-if="comprehensionFailed"> Oops! You made a mistake.<br/>
+        Remember, the player wins just in case
+        <b>{{
+            structure == "conjunctive" ? "both" : "at least one"
+          }}</b> {{
+          structure == "conjunctive" ? "balls are" : "ball is"
+        }}
+        <b>solid</b>.
+        <br/>
+        Here are the possible outcomes:
+      </p>
+      <div v-if="comprehensionFailed" class="outcomes">
+        <div class="col first">
+          <Ball class='firstFirst' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "solid": "stripe"'/>
+          <Ball class='firstSecond' :class="{disjAnimation: structure=='disjunctive'}" color="none" type='solid'/>
+          <Ball class='firstThird' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "stripe": "solid"'/>
+        </div>
+        <div class="col second">
+          <Ball class='secondFirst' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "solid": "stripe"'/>
+          <Ball class='secondSecond' :class="{disjAnimation: structure=='disjunctive'}" color="none" type='stripe'/>
+          <Ball class='secondThird' :class="{disjAnimation: structure=='disjunctive'}" color="none"
+                :type='structure === "conjunctive"? "stripe": "solid"'/>
+        </div>
+        <div class="col third">
+          <p class='thirdFirst'>{{ structure == "conjunctive" ? "WIN" : "LOSE" }}</p>
+          <p class='thirdSecond'>{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
+          <p class="thirdThird">{{ structure == "conjunctive" ? "LOSE" : "WIN" }}</p>
+        </div>
+      </div>
+      <p v-if="comprehensionFailed">Let’s try again!
       </p>
     </InstructionScreen>
 
-    <InstructionScreen>
-      comprehension test to be added.
+    <template v-if="comprehensionFailed" v-for="(trial, i) in comprehension">
+      <Screen>
+        <Slide>
+          <p>
+            Remember, the player wins just in case in case
+            <b>{{ structure == "conjunctive" ? "both" : "at least one" }}</b>
+            {{ structure == "conjunctive" ? "balls are" : "ball is" }}
+            <b>solid</b>.
+          </p>
+
+          To make sure you understand, please select whether a player would win or lose when the following balls are
+          released:
+
+          <p class="outcomeBalls">
+            <Ball class="col" :class="trial.delayedUrn === 'left' ? 'compLate' : 'compEarly'"
+                  :color="trial.delayedUrn === 'left' ? getColorLeftUrn(trial.lateBall) : getColorLeftUrn(trial.earlyBall)"
+                  :type="trial.delayedUrn === 'left' ? trial.lateBall : trial.earlyBall"/>
+            <Ball class="col" :class="trial.delayedUrn === 'left' ? 'compEarly' : 'compLate'"
+                  :color="trial.delayedUrn === 'left' ? getColorRightUrn(trial.earlyBall) : getColorRightUrn(trial.lateBall)"
+                  :type="trial.delayedUrn === 'left' ? trial.earlyBall : trial.lateBall"/>
+          </p>
+
+          <ForcedChoiceInput
+              :response.sync="$magpie.measurements.response"
+              :options="['win', 'lose']"
+              @update:response="$magpie.saveAndNextScreen();"/>
+
+          <Record
+              :data="{
+                  trialType : 'comprehension-2',
+                  trialNr : i+1,
+                  correctResponse: trial.correctResponse,
+                  leftColor : trial.leftColor,
+                  rightColor : trial.rightColor,
+                  response : $magpie.measurements.response,
+                  structure : structure
+                }"
+          />
+        </Slide>
+      </Screen>
+    </template>
+
+    <InstructionScreen :title="'Instructions'">
+      <p>
+        In this experiment, Alice will be playing the game.
+        You will see a few rounds, and after each round, you will be asked to judge several statements.
+      </p>
+      <p>
+        <b>Pay close attention</b> to when the balls are released from either of the two urns, as they may be released
+        at different times.
+      </p>
+      <p>Let’s practice this first!</p>
     </InstructionScreen>
 
     <template v-for="(trial, i) of training_trials">
-
-      <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length"
+      <TrialScreen trialType="training" :trial="trial" :index="i" :length="training_trials.length" :getType="getType"
                    :getDelay="getDelay" :which_urn_prompted_first="which_urn_prompted_first"/>
     </template>
 
@@ -203,106 +252,61 @@
                    :getDelay="getDelay" :which_urn_prompted_first="which_urn_prompted_first"/>
     </template>
 
+    <PostTestScreen/>
     <SubmitResultsScreen/>
   </Experiment>
 </template>
-<style scoped>
 
-
-.outcomes {
-  width: 100%;
-  justify-content: center;
-  display: grid;
-  grid-template-columns: 50px 50px 50px;
-}
-
-.outcomes .col {
-  display: grid;
-  align-items: center;
-  gap: 10px;
-  grid-template-rows: 50px 50px 50px 50px;
-}
-
-.urns {
-  display: grid;
-  padding: 10px;
-  grid-template-areas:
-    '. earlyUrn .'
-    'ALabel . BLabel'
-    'AUrn . BUrn';
-  grid-template-columns:  auto auto auto;
-  grid-template-rows: auto  35px auto;
-  justify-items: center;
-  align-items: start;
-  box-sizing: border-box;
-}
-
-.urns > .earlyUrn {
-  grid-area: earlyUrn;
-}
-
-.urns > .ALabel {
-  grid-area: ALabel;
-  font-size: 30pt;
-  font-weight: bold;
-}
-
-.urns > .BLabel {
-  grid-area: BLabel;
-  font-size: 30pt;
-  font-weight: bold;
-}
-
-.urns > .AUrn {
-  grid-area: AUrn;
-  align-items: start;
-}
-
-.urns > .BUrn {
-  grid-area: BUrn;
-  align-items: start;
-}
-
-</style>
 <script>
-import _ from 'lodash';
-import LeakyUrns from "../../../00-customComponents/LeakyUrns.vue";
-import LabeledBall from "../../../00-customComponents/LabeledBall.vue";
-import LabeledUrn from "../../../00-customComponents/LabeledUrn.vue";
+import _ from "lodash";
+
+import UrnGame from "../../../00-customComponents/UrnGame.vue";
+import Urn from "../../../00-customComponents/Urn.vue";
+import Ball from "../../../00-customComponents/Ball.vue";
 
 import TrialScreen from "./TrialScreen.vue";
 
 import training_trials_all from "../trials/training_trials.csv";
 import main_trials_all from "../trials/main_trials.csv";
 import comprehension_all from "../trials/comprehension.csv";
-import Urn from "../../../00-customComponents/Urn.vue";
-import Ball from "../../../00-customComponents/Ball.vue";
-
 
 const structure = _.sample(["conjunctive", "disjunctive"]);
 console.log('structure ', structure);
-const which_urn_prompted_first = _.sample(["early", "late"]);
+const which_urn_prompted_first = _.sample(["left", "right"]);
 console.log('which_urn_prompted_first', which_urn_prompted_first);
 
-let main_trials = _.shuffle(_.filter(main_trials_all, function (i) {
+let main_trials = _.filter(main_trials_all, function (i) {
   return i.structure == structure;
-}));
-
+});
 main_trials.forEach(trial => {
-  trial['outputLabelEarly'] = _.sample(['A', 'B']);
+  trial['delayedUrn'] = _.sample(["left", "right"]);
 });
 
 // add attention checks
-main_trials[2]['attentionCheck'] = true
-main_trials[5]['attentionCheck'] = true
-main_trials[8]['attentionCheck'] = true
+let attention_check_main_trials = _.sampleSize(_.filter(main_trials, function (trial) {
+  return !trial.earlyEnd;
+}), 3);
+attention_check_main_trials.forEach(trial => {
+  trial.attentionCheck = true;
+});
+
+const ids_to_remove = new Set(attention_check_main_trials.map(item => item.id));
+
+let no_attention_check_main_trials = _.shuffle(main_trials.filter(item => !ids_to_remove.has(item.id)));
+
+const attentionCheckIndexes = [2, 5, 8];
+
+main_trials = Array.from({length: 11}, (_, i) =>
+    attentionCheckIndexes.includes(i)
+        ? attention_check_main_trials[attentionCheckIndexes.indexOf(i)]
+        : no_attention_check_main_trials.shift());
 
 const training_trials = _.filter(training_trials_all, function (i) {
   return i.structure == structure;
 });
 
 training_trials.forEach(trial => {
-  trial['outputLabelEarly'] = _.sample(['A', 'B']);
+  trial['delayedUrn'] = _.sample(["left", "right"]);
 });
 
 const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
@@ -313,8 +317,8 @@ console.log('training trials', JSON.parse(JSON.stringify(training_trials)));
 console.log('main trials', JSON.parse(JSON.stringify(main_trials)));
 
 export default {
-  name: 'App',
-  components: {Ball, Urn, LeakyUrns, LabeledBall, LabeledUrn, TrialScreen},
+  name: "App",
+  components: {TrialScreen, Urn, UrnGame, Ball},
   data() {
     return {
       structure: structure,
@@ -325,12 +329,7 @@ export default {
       comprehensionFailed: false
     };
   },
-  computed: {
-    // Expose lodash to template code
-    _() {
-      return _;
-    }
-  }, methods: {
+  methods: {
     getType(color) {
       let type = 'solid';
       switch (color) {
@@ -344,12 +343,6 @@ export default {
           type = 'stripe';
           break;
         case 'green':
-          type = 'stripe';
-          break;
-        case 'black':
-          type = 'solid';
-          break;
-        case 'purple':
           type = 'stripe';
           break;
       }
@@ -376,10 +369,417 @@ export default {
       }
       return delay;
     },
+    getColorLeftUrn(type) {
+      if (type === "solid") {
+        return "red"
+      } else {
+        return "blue"
+      }
+    },
+    getColorRightUrn(type) {
+      if (type === "solid") {
+        return "yellow"
+      } else {
+        return "green"
+      }
+    },
     saveComprehensionResponse: function (response, correctResponse) {
       this.comprehensionFailed = (this.comprehensionFailed || !(response == correctResponse));
       $magpie.saveAndNextScreen();
     }
+  },
+  computed: {
+    _() {
+      return _;
+    }
   }
 };
 </script>
+
+<style>
+.outcomes {
+  width: 100%;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 50px 50px 50px;
+}
+
+.outcomes .col {
+  display: grid;
+  align-items: center;
+  gap: 10px;
+  grid-template-rows: 50px 50px 50px 50px;
+}
+
+.outcomeBalls {
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 50px 50px;
+  gap: 10px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.outcomeBalls .col {
+  display: grid;
+  align-items: center;
+
+}
+
+.urns {
+  width: 100%;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 50px;
+}
+
+.red {
+  color: #B22222;
+}
+
+.yellow {
+  color: #EEB14F;
+}
+
+.green {
+  color: #3C902B;
+}
+
+.blue {
+  color: #3A4FB4;
+}
+
+
+/* First column */
+.firstFirst {
+  animation: firstFirstConjAnimation 16s steps(1) infinite;
+}
+
+.firstFirst.disjAnimation {
+  animation: firstFirstDisjAnimation 16s steps(1) infinite;
+}
+
+.firstSecond {
+  animation: firstSecondConjAnimation 16s steps(1) infinite;
+}
+
+.firstSecond.disjAnimation {
+  animation: firstSecondDisjAnimation 16s steps(1) infinite;
+}
+
+.firstThird {
+  animation: firstThirdConjAnimation 16s steps(1) infinite;
+}
+
+.firstThird.disjAnimation {
+  animation: firstThirdDisjAnimation 16s steps(1) infinite;
+}
+
+/* Second column */
+.secondFirst {
+  animation: secondFirstConjAnimation 16s steps(1) infinite;
+}
+
+.secondFirst.disjAnimation {
+  animation: secondFirstDisjAnimation 16s steps(1) infinite;
+}
+
+.secondSecond {
+  animation: secondSecondConjAnimation 16s steps(1) infinite;
+}
+
+.secondSecond.disjAnimation {
+  animation: secondSecondDisjAnimation 16s steps(1) infinite;
+}
+
+.secondThird {
+  animation: secondThirdConjAnimation 16s steps(1) infinite;
+}
+
+.secondThird.disjAnimation {
+  animation: secondThirdDisjAnimation 16s steps(1) infinite;
+}
+
+
+/* Third column */
+.thirdFirst {
+  opacity: 0;
+  animation: thirdFirstAnimation 16s steps(1) infinite;
+}
+
+.thirdSecond {
+  opacity: 0;
+  animation: thirdSecondAnimation 16s steps(1) infinite;
+}
+
+
+.thirdThird {
+  opacity: 0;
+  animation: thirdThirdAnimation 16s steps(1) infinite;
+}
+
+
+/* First set */
+@keyframes firstFirstConjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  3.125% {
+    --color: #B22222;
+    --name: 'R';
+  }
+  56.25% {
+    --color: #B22222;
+    --name: 'R';
+  }
+}
+
+@keyframes secondFirstConjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  6.25% {
+    --color: #EEB14F;
+    --name: 'Y';
+  }
+  53.125% {
+    --color: #EEB14F;
+    --name: 'Y';
+  }
+}
+
+@keyframes firstFirstDisjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  3.125% {
+    --color: #3A4FB4;
+    --name: 'B';
+  }
+  56.25% {
+    --color: #3A4FB4;
+    --name: 'B';
+  }
+}
+
+@keyframes secondFirstDisjAnimation {
+
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  6.25% {
+    --color: #3C902B;
+    --name: 'G';
+  }
+  53.125% {
+    --color: #3C902B;
+    --name: 'G';
+  }
+}
+
+@keyframes thirdFirstAnimation {
+  0%, 50%, 100% {
+    opacity: 0;
+  }
+  9.375%, 59.375% {
+    opacity: 1;
+  }
+}
+
+/* Second set */
+@keyframes firstSecondConjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+    background: none;
+    background-color: var(--color);
+  }
+  15.625% {
+    --color: #B22222;
+    --name: 'R';
+    background: none;
+    background-color: var(--color);
+  }
+  68.75% {
+    --color: #3A4FB4;
+    --name: 'B';
+    background: linear-gradient(
+        to bottom,
+        #fff 0 20%,
+        var(--color) 20% 80%,
+        #fff 80% 100%
+    );
+  }
+}
+
+@keyframes secondSecondConjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+    background: none;
+    background-color: var(--color);
+  }
+  18.75% {
+    --color: #3C902B;
+    --name: 'G';
+    background: linear-gradient(
+        to bottom,
+        #fff 0 20%,
+        var(--color) 20% 80%,
+        #fff 80% 100%
+    );
+  }
+  65.625% {
+    --color: #EEB14F;
+    --name: 'Y';
+    background: none;
+    background-color: var(--color);
+  }
+}
+
+@keyframes firstSecondDisjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+    background: none;
+    background-color: var(--color);
+  }
+  15.625% {
+    --color: #3A4FB4;
+    --name: 'B';
+    background: linear-gradient(
+        to bottom,
+        #fff 0 20%,
+        var(--color) 20% 80%,
+        #fff 80% 100%
+    );
+  }
+  68.75% {
+    --color: #B22222;
+    --name: 'R';
+    background: none;
+    background-color: var(--color);
+  }
+}
+
+@keyframes secondSecondDisjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+    background: none;
+    background-color: var(--color);
+  }
+  18.75% {
+    --color: #EEB14F;
+    --name: 'Y';
+    background: none;
+    background-color: var(--color);
+  }
+  65.625% {
+    --color: #3C902B;
+    --name: 'G';
+    background: linear-gradient(
+        to bottom,
+        #fff 0 20%,
+        var(--color) 20% 80%,
+        #fff 80% 100%
+    );
+  }
+}
+
+@keyframes thirdSecondAnimation {
+  0%, 50%, 100% {
+    opacity: 0;
+  }
+  21.875%, 71.875% {
+    opacity: 1;
+  }
+}
+
+/* Third set */
+@keyframes firstThirdConjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  28.125% {
+    --color: #3A4FB4;
+    --name: 'B';
+  }
+}
+
+@keyframes secondThirdConjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  78.125% {
+    --color: #3C902B;
+    --name: 'G';
+  }
+}
+
+@keyframes firstThirdDisjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  28.125% {
+    --color: #B22222;
+    --name: 'R';
+  }
+}
+
+@keyframes secondThirdDisjAnimation {
+  0%, 50%, 100% {
+    --color: white;
+    --name: '';
+  }
+  78.125% {
+    --color: #EEB14F;
+    --name: 'Y';
+  }
+}
+
+@keyframes thirdThirdAnimation {
+  0%, 50%, 100% {
+    opacity: 0;
+  }
+  31.25%, 81.25% {
+    opacity: 1;
+  }
+}
+
+.compEarly {
+  opacity: 0;
+  animation: compEarlyAnimation 3s steps(1) infinite;
+}
+
+.compLate {
+  opacity: 0;
+  animation: compLateAnimation 3s steps(1) infinite;
+}
+
+@keyframes compEarlyAnimation {
+  0%, 100% {
+    opacity: 0;
+  }
+  16.67% {
+    opacity: 1;
+  }
+}
+
+@keyframes compLateAnimation {
+  0%, 100% {
+    opacity: 0;
+  }
+  33.34% {
+    opacity: 1;
+  }
+}
+</style>
