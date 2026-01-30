@@ -6,6 +6,6 @@ export default {
     completionUrl: '',
     contactEmail: 'michael.franke@uni-tuebingen.de',
     // Either 'debug', 'directLink' or 'prolific'
-    mode: 'debug',
+    mode: 'directLink',
     language: 'en'
 };
