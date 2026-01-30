@@ -1,0 +1,9 @@
+structure,trialNr,earlyBall,lateBall,correctResponse
+disjunctive,1,solid,solid,win
+disjunctive,2,stripe,solid,win
+disjunctive,3,solid,stripe,win
+disjunctive,4,stripe,stripe,lose
+conjunctive,1,solid,solid,win
+conjunctive,2,stripe,solid,lose
+conjunctive,3,solid,stripe,lose
+conjunctive,4,stripe,stripe,lose
