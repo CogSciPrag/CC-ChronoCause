@@ -292,8 +292,8 @@ const comprehension = _.shuffle(_.filter(comprehension_all, function (i) {
   return i.structure == structure;
 }));
 
-console.log('training trials', JSON.parse(JSON.stringify(training_trials)));
-console.log('main trials', JSON.parse(JSON.stringify(main_trials)));
+// console.log('training trials', JSON.parse(JSON.stringify(training_trials)));
+// console.log('main trials', JSON.parse(JSON.stringify(main_trials)));
 
 export default {
   name: "App",
