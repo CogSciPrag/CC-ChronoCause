@@ -168,9 +168,6 @@ if (!props.enabled && props.earlyEnd) {
   }
 }
 
-
-console.log(props.earlyEnd, leftIsEarlier);
-
 function runGame() {
   $magpie.measurements.beginClicked = Date.now();
 
