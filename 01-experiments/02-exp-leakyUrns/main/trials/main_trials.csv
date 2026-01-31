@@ -13,13 +13,13 @@ id,structure,earlyBall,lateBall,earlyEnd,gameOutcome,delay,attentionCheck
 12,conjunctive,stripe,stripe,true,lose,long,false
 13,disjunctive,solid,solid,true,win,short,false
 14,disjunctive,solid,stripe,true,win,short,false
-15,disjunctive,stripe,solid,false,lose,short,false
+15,disjunctive,stripe,solid,false,win,short,false
 16,disjunctive,stripe,stripe,false,lose,short,false
 17,disjunctive,solid,solid,true,win,medium,false
 18,disjunctive,solid,stripe,true,win,medium,false
-19,disjunctive,stripe,solid,false,lose,medium,false
+19,disjunctive,stripe,solid,false,win,medium,false
 20,disjunctive,stripe,stripe,false,lose,medium,false
 21,disjunctive,solid,solid,true,win,long,false
 22,disjunctive,solid,stripe,true,win,long,false
-23,disjunctive,stripe,solid,false,lose,long,false
+23,disjunctive,stripe,solid,false,win,long,false
 24,disjunctive,stripe,stripe,false,lose,long,false
