@@ -159,7 +159,7 @@ function getRightTiming() {
               attentionCheck : props.trial.attentionCheck,
               attentionResponse: $magpie.measurements.attentionResponse,
               attentionCorrectResponse: props.trial.delayedUrn === 'none' ? 'Both balls were released at the same time':
-              (props.trial.delayedUrn =='left' ? 'The ' + props.trial.rightColor + ' ball' : 'The ' + props.trial.leftColor + ' ball'),
+              (props.trial.delayedUrn =='left' ? 'The ' + getColorRightUrn(props.trial.earlyBall) + ' ball' : 'The ' + getColorLeftUrn(props.trial.earlyBall) + ' ball'),
               beginClicked: $magpie.measurements.beginClicked,
               submitClicked: $magpie.measurements.submitClicked
             }"
@@ -267,7 +267,7 @@ function getRightTiming() {
               gameOutcome: props.trial.gameOutcome,
               delay: props.trial.delay,
               delayedUrn: props.trial.delayedUrn,
-              attentionCheck : props.trial.attentionCheck,
+              whichUrnPromptedFirst : props.which_urn_prompted_first,
               responseLeft: $magpie.measurements.responseLeft,
               responseRight: $magpie.measurements.responseRight,
               beginClicked: $magpie.measurements.beginClicked,

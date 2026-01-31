@@ -207,7 +207,7 @@
           </p>
 
           <ForcedChoiceInput
-              :response.sync="$magpie.measurements.response"
+              :response.sync="$magpie.measurements.comprehensionResponse"
               :options="['win', 'lose']"
               @update:response="$magpie.saveAndNextScreen();"/>
 
