@@ -17,6 +17,7 @@ jobs:
           - ./01-experiments/01-exp-non-leakyUrns/pilot2
           - ./01-experiments/01-exp-non-leakyUrns/main
           - ./01-experiments/02-exp-leakyUrns/pilot1
+          - ./01-experiments/02-exp-leakyUrns/main
 
     runs-on: ubuntu-latest
     steps:

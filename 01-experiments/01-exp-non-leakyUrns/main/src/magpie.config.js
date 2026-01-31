@@ -1,11 +1,11 @@
 export default {
-    experimentId: '52',
-    serverUrl: 'https://magpie-cogsciprag.fly.dev',
-    socketUrl: 'wss://magpie-cogsciprag.fly.dev/socket',
+experimentId: '53',
+serverUrl: 'https://magpie-cogsciprag.fly.dev',
+socketUrl: 'wss://magpie-cogsciprag.fly.dev/socket',
     // this will be used in prolific mode
-    completionUrl: 'https://app.prolific.com/submissions/complete?cc=C6S7B339',
+    completionUrl: 'https://app.prolific.com/submissions/complete?cc=C1LA17OY',
     contactEmail: 'michael.franke@uni-tuebingen.de',
     // Either 'debug', 'directLink' or 'prolific'
-    mode: 'directLink',
+    mode: 'prolific',
     language: 'en'
 };
