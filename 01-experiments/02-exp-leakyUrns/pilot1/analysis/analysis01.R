@@ -44,13 +44,9 @@ scale_fill_discrete <- function(...) {
 ##################################################
 
 # Data
-raw <- read.csv("01-experiments/02-exp-leakyUrns/main/data/results_54_CC-ChronoCause-02-exp-leakyUrns-main_EZ_first-ten.csv")
+raw <- read.csv("01-experiments/02-exp-leakyUrns/pilot1/data/test_data.csv")
 glimpse(raw)
 
-# Check if someone submitted more than once (23 is the max num. of rows per response)
-raw %>%
-  count(prolific_pid)%>%
-  filter(n > 23)
 # Preprocessing
 full <- raw
 
@@ -111,9 +107,6 @@ full %>%
   filter(!(criticalAttentionCheck >= attentionThreshold)) %>%
   distinct(prolific_pid) %>%
   nrow()
-
-# N before exlusion
-full %>% distinct(prolific_pid) %>% nrow()
 
 # Final DF
 final_sample <- full %>% filter(!excluded)
